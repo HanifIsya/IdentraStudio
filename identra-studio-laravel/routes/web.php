@@ -7,13 +7,13 @@ Route::get('/', function () {
 });
 
 Route::get('/register', function () {
-    return view('register'); // Ini akan mencari file register.blade.php
+    return view('register');
 })->name('register');
 
 Route::get('/login', function () {
-    return view('login'); // Ini akan mencari file login.blade.php
+    return view('login');
 })->name('login');
 
 Route::get('/home', function () {
-    return view('home'); // Ini akan mencari file home.blade.php
+    return view('home');
 })->name('home');
