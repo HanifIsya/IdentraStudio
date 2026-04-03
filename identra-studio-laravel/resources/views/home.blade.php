@@ -16,12 +16,28 @@
   font-weight: 800;
   font-style: normal;
 }
+.logo-geser {
+    animation: geser 10s ease-in-out infinite alternate;
+}
+
+@keyframes geser {
+    from { 
+        transform: translateX(0); 
+    }
+    to { 
+        transform: translateX(calc(100vw - 100%)); 
+    }
+}
 
 
     </style>
 
 
 @vite('resources/css/app.css')
+
+
+
+
 </head>
 
 
@@ -163,10 +179,13 @@ dan Swasta.</p>
     </div>
 </section>
 
-<footer class="bg-gray-950 text-white p-6 text-center py-10">
+<footer class="bg-gray-950 text-white p-6 py-10">
+    <div class= "gap-4">
+     <img src="{{ asset('img/logo_identra.png') }}" alt="Logo" class="w-auto h-10  mt-4 logo-geser">
+    </div>
+
     <p class="text-gray-600 text-right">PROVIDING CREATIVE IDEAS FOR YOUR BUSINESS</p>
     <p class="text-right text-white text-sm">&copy; 2026 Identra Studio. All rights reserved.</p>
-
 </footer>
     
 </body>
