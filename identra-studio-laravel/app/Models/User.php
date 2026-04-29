@@ -10,6 +10,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
 
+    // Menentukan primary key karena kamu tidak memakai 'id' default
     protected $primaryKey = 'User_ID';
 
     protected $fillable = [
@@ -21,6 +22,12 @@ class User extends Authenticatable
     protected $hidden = [
         'Password',
     ];
+
+   
+    public function getAuthPassword()
+    {
+        return $this->Password;
+    }
 
     // Relasi: User memiliki banyak Pesanan
     public function pesanans()

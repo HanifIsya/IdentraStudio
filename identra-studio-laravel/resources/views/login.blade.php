@@ -3,64 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet">
-
-
-<style>
-
-.iceland-regular {
-  font-family: "Iceland", sans-serif;
-  font-weight: 400;
-  font-style: normal;
-}
-</style>
-
-<script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            fontFamily: {
-              iceland: ['"Iceland"', 'sans-serif'],
-            },
-          }
+    <title>Login - Identra Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Iceland&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { iceland: ['"Iceland"', 'sans-serif'] },
+                }
+            }
         }
-      }
     </script>
-
-@vite('resources/css/app.css')
+    @vite('resources/css/app.css')
 </head>
-<body>
-    <section class="relative min-h-screen w-full flex items-center justify-center bg-black">
-<div class=" bg-gray-950 container shadow-md rounded-xl flex justify-center items-center flex-col">
-    <h1 class="text-white text-left text-2xl pt-6 font-sans">SELAMAT DATANG!</h1>
-    <h3 class="text-gray-500 text-left text-md font-sans opacity-80">Silahkan masuk ke akun Identra Studio anda.</h3>
+<body class="bg-black">
+    <section class="relative min-h-screen w-full flex items-center justify-center p-4">
+        <div class="bg-gray-950 w-full max-w-md shadow-2xl rounded-xl flex flex-col p-8 border border-gray-800">
+            <h1 class="text-white text-2xl font-sans font-bold">SELAMAT DATANG!</h1>
+            <h3 class="text-gray-500 text-md font-sans opacity-80">Silahkan masuk ke akun Identra Studio anda.</h3>
 
-    <form class="pt-10"> 
-        <label class="pt-3 font-iceland text-white" for="Email">Email Address</label><br>
-        <input type="email" id="Email" name="Email" placeholder="Input Your Email Here..." class="w-full border border-gray-300 text-amber-50" required><br>
-        <label class="pt-3 font-iceland text-white" for="pwd"> Password</label><br>
-        <input type="password" id="pwd" name="pwd" placeholder="Input Your Password..." class="w-full border border-gray-300 text-amber-50" required><br>
+            @if ($errors->any())
+                <div class="bg-red-500 text-white p-3 rounded mt-4 text-sm">
+                    {{ $errors->first() }}
+                </div>
+            @endif
 
-        <input type="checkbox" id="remember" name="remember">
-        <label class="pt-3 font-iceland text-white" for="remember"> Ingat saya</label><br>
-        <button type="submit" class="w-full text-center pt-3 border border-gray-200 bg-white py-2 px-6 font-bold transition hover:shadow-xl transform hover:scale-105 duration-300">MASUK SEKARANG</button>
-    </form>
-    <div class="flex flex-row p-6 gap-5">
-        <h3 class="font-sans text-gray-500 text-md">Belum bergabung dengan kami?</h3>
-        <a class="font-iceland text-white font-bold text-xl" href="{{ route('register') }}">DAFTAR AKUN</a>
-    </div>
-    
+            <form class="mt-8 space-y-4" action="{{ route('login') }}" method="POST">
+                @csrf
+                <div>
+                    <label class="font-iceland text-white block mb-1" for="Email">Email Address</label>
+                    <input type="email" id="Email" name="Email" value="{{ old('Email') }}" placeholder="Input Your Email Here..." class="w-full bg-transparent border border-gray-700 rounded p-2 text-white focus:border-white outline-none" required>
+                </div>
+                
+                <div>
+                    <label class="font-iceland text-white block mb-1" for="Password">Password</label>
+                    <input type="password" id="Password" name="Password" placeholder="Input Your Password..." class="w-full bg-transparent border border-gray-700 rounded p-2 text-white focus:border-white outline-none" required>
+                </div>
 
+                <div class="flex items-center">
+                    <input type="checkbox" id="remember" name="remember" class="mr-2">
+                    <label class="font-iceland text-white text-sm" for="remember"> Ingat saya</label>
+                </div>
 
+                <button type="submit" class="w-full bg-white text-black py-3 px-6 font-bold transition hover:bg-gray-200 transform hover:scale-[1.02] duration-300">MASUK SEKARANG</button>
+            </form>
 
-
-</div>
-    
-</section>
-
+            <div class="flex flex-col sm:flex-row items-center justify-center mt-8 gap-2">
+                <h3 class="font-sans text-gray-500 text-sm text-center">Belum bergabung dengan kami?</h3>
+                <a class="font-iceland text-white font-bold text-lg hover:underline" href="{{ route('register') }}">DAFTAR AKUN</a>
+            </div>
+        </div>
+    </section>
 </body>
 </html>

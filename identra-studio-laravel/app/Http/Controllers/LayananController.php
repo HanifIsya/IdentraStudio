@@ -7,60 +7,80 @@ use Illuminate\Http\Request;
 
 class LayananController extends Controller
 {
-    // GET /api/layanans
+    /**
+     * Menampilkan daftar layanan untuk sisi User (Blade View).
+     */
     public function index()
     {
+        // Mengambil semua data layanan dari database
         $layanans = Layanan::all();
-        return response()->json($layanans);
+
+        // Mengirim data ke view LayananUser.blade.php
+        return view('LayananUser', compact('layanans'));
     }
 
-    // POST /api/layanans
+    /**
+     * Menyimpan layanan baru (Bisa digunakan oleh Admin nanti).
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'Nama_layanan' => 'required|string',
-            'Kategori'     => 'required|string',
+            'nama_layanan' => 'required|string|max:255',
+            'tagline'      => 'required|string|max:255',
+            'ikon'         => 'required|string', // Contoh: fa-desktop
+            'fitur'        => 'required|array',  // Dikirim sebagai array dari form
+            'harga'        => 'required|string',
+            'is_highlight' => 'boolean',
         ]);
 
-        $layanan = Layanan::create($request->only('Nama_layanan', 'Kategori'));
+        Layanan::create([
+            'nama_layanan' => $request->nama_layanan,
+            'tagline'      => $request->tagline,
+            'ikon'         => $request->ikon,
+            'fitur'        => $request->fitur,
+            'harga'        => $request->harga,
+            'is_highlight' => $request->is_highlight ?? false,
+        ]);
 
-        return response()->json([
-            'message' => 'Layanan berhasil ditambahkan',
-            'data'    => $layanan,
-        ], 201);
+        return redirect()->back()->with('success', 'Layanan berhasil ditambahkan!');
     }
 
-    // GET /api/layanans/{id}
+    /**
+     * Menampilkan detail layanan tertentu (Jika dibutuhkan).
+     */
     public function show($id)
     {
         $layanan = Layanan::findOrFail($id);
-        return response()->json($layanan);
+        return view('LayananDetail', compact('layanan'));
     }
 
-    // PUT /api/layanans/{id}
+    /**
+     * Memperbarui data layanan.
+     */
     public function update(Request $request, $id)
     {
         $layanan = Layanan::findOrFail($id);
 
         $request->validate([
-            'Nama_layanan' => 'sometimes|required|string',
-            'Kategori'     => 'sometimes|required|string',
+            'nama_layanan' => 'sometimes|required|string',
+            'tagline'      => 'sometimes|required|string',
+            'fitur'        => 'sometimes|required|array',
+            'harga'        => 'sometimes|required|string',
         ]);
 
-        $layanan->update($request->only('Nama_layanan', 'Kategori'));
+        $layanan->update($request->all());
 
-        return response()->json([
-            'message' => 'Layanan berhasil diperbarui',
-            'data'    => $layanan,
-        ]);
+        return redirect()->back()->with('success', 'Layanan berhasil diperbarui!');
     }
 
-    // DELETE /api/layanans/{id}
+    /**
+     * Menghapus layanan.
+     */
     public function destroy($id)
     {
         $layanan = Layanan::findOrFail($id);
         $layanan->delete();
 
-        return response()->json(['message' => 'Layanan berhasil dihapus']);
+        return redirect()->back()->with('success', 'Layanan berhasil dihapus!');
     }
 }
