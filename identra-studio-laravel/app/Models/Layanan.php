@@ -3,19 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Layanan extends Model
-{
+class Layanan extends Model {
     protected $primaryKey = 'Layanan_ID';
-
     protected $fillable = [
-        'Nama_layanan',
-        'Kategori',
+        'nama_layanan', 'tagline', 'ikon', 'fitur', 'harga', 'is_highlight'
     ];
 
-    // Relasi: Layanan memiliki banyak Pesanan
-    public function pesanans()
-    {
-        return $this->hasMany(Pesanan::class, 'Layanan_ID', 'Layanan_ID');
-    }
+    // Mengonversi JSON fitur menjadi Array secara otomatis
+    protected $casts = [
+        'fitur' => 'array',
+    ];
 }

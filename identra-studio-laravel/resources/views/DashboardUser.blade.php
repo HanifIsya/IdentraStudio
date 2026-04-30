@@ -375,31 +375,36 @@
         </header>
 
         <!-- Layanan -->
-        <section style="margin-bottom:28px;">
-            <h3 style="font-size:18px; font-weight:700; margin-bottom:16px;">Layanan</h3>
-            <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:12px;">
-                @php
-                    $services = [
-                        ['icon' => 'fa-desktop', 'name' => 'Website Design', 'desc' => 'Create your own website', 'white' => true],
-                        ['icon' => 'fa-pen-nib', 'name' => 'Logo Creation', 'desc' => 'Design a custom logo', 'white' => false],
-                        ['icon' => 'fa-mobile-screen', 'name' => 'App Development', 'desc' => 'Build a mobile app', 'white' => false],
-                        ['icon' => 'fa-image', 'name' => 'Graphic Design', 'desc' => 'Get creative visuals', 'white' => false],
-                        ['icon' => 'fa-video', 'name' => 'Premium Pack', 'desc' => 'Film Production', 'white' => false],
-                        ['icon' => 'fa-camera', 'name' => 'Basic Pack Film', 'desc' => 'Short Production', 'white' => false],
-                    ];
-                @endphp
-
-                @foreach($services as $s)
-                <div class="service-card {{ $s['white'] ? 'white' : 'dark' }}">
-                    <div class="service-icon" style="color:#A855F7;">
-                        <i class="fa-solid {{ $s['icon'] }}"></i>
-                    </div>
-                    <p style="font-weight:700; font-size:12px; margin:0; color:#1a1a2e;">{{ $s['name'] }}</p>
-                    <p style="font-size:10px; margin:0; color:#6B7280;">{{ $s['desc'] }}</p>
-                </div>
-                @endforeach
+       <section style="margin-bottom:28px;">
+    <h3 style="font-size:18px; font-weight:700; margin-bottom:16px;">Layanan</h3>
+    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:12px;">
+        
+        @forelse($layanans as $layanan)
+        <div class="group service-card bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-white cursor-pointer" 
+             style="border-radius:20px; padding:20px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
+            
+            <div class="service-icon transition-colors duration-300 text-white group-hover:text-id-purple" style="font-size:32px; margin-bottom:4px;">
+                <i class="fa-solid {{ $layanan->ikon }}"></i>
             </div>
-        </section>
+            
+            <p class="transition-colors duration-300 text-white group-hover:text-black" 
+               style="font-weight:700; font-size:12px; margin:0;">
+               {{ $layanan->nama_layanan }}
+            </p>
+            
+            <p class="transition-colors duration-300 text-id-gray group-hover:text-gray-600" 
+               style="font-size:10px; margin:0;">
+               {{ $layanan->tagline }}
+            </p>
+        </div>
+        @empty
+        <div class="col-span-6 text-center py-10 opacity-50">
+            <p>Belum ada layanan yang tersedia di database.</p>
+        </div>
+        @endforelse
+
+    </div>
+</section>
 
         <!-- Bottom grid -->
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; padding-bottom:90px;">

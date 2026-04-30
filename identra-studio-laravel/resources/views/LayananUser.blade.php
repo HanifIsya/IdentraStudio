@@ -70,31 +70,36 @@
         </header>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @foreach($layanans as $layanan)
-            <div class="card-service {{ $layanan->is_highlight ? 'white' : 'dark' }}">
-                <div class="flex items-center gap-4 mb-6">
-                    <i class="fa-solid {{ $layanan->ikon }} text-3xl"></i>
-                    <div>
-                        <h3 class="font-bold text-lg leading-tight">{{ $layanan->nama_layanan }}</h3>
-                        <p class="text-[10px] opacity-60">{{ $layanan->tagline }}</p>
-                    </div>
-                </div>
-
-                <ul class="flex-grow space-y-3 mb-8">
-                    @foreach($layanan->fitur as $fitur)
-                    <li class="flex items-center gap-3 text-xs">
-                        <i class="fa-solid fa-check text-blue-500"></i>
-                        <span>{{ $fitur }}</span>
-                    </li>
-                    @endforeach
-                </ul>
-
-                <div class="flex justify-end mt-auto">
-                    <span class="price-tag">{{ $layanan->harga }}</span>
+    @foreach($layanans as $layanan)
+    <div class="group card-service bg-white/5 backdrop-blur-md border border-white/10 p-6 rounded-[24px] transition-all duration-300 hover:bg-white hover:text-black hover:scale-[1.02] cursor-pointer flex flex-col justify-between h-full">
+        
+        <div>
+            <div class="flex items-center gap-4 mb-6">
+                <i class="fa-solid {{ $layanan->ikon }} text-3xl text-white group-hover:text-purple-600 transition-colors"></i>
+                <div>
+                    <h3 class="font-bold text-lg leading-tight">{{ $layanan->nama_layanan }}</h3>
+                    <p class="text-[10px] opacity-60 group-hover:text-gray-600">{{ $layanan->tagline }}</p>
                 </div>
             </div>
-            @endforeach
+
+            <ul class="space-y-3 mb-8">
+                @foreach($layanan->fitur as $fitur)
+                <li class="flex items-center gap-3 text-xs">
+                    <i class="fa-solid fa-check text-purple-400 group-hover:text-blue-600"></i>
+                    <span class="group-hover:text-gray-800">{{ $fitur }}</span>
+                </li>
+                @endforeach
+            </ul>
         </div>
+
+        <div class="flex justify-end mt-auto">
+            <span class="bg-purple-600/20 text-purple-400 group-hover:bg-purple-600 group-hover:text-white px-4 py-1 rounded-full text-sm font-bold transition-all">
+                {{ $layanan->harga }}
+            </span>
+        </div>
+    </div>
+    @endforeach
+</div>
     </main>
 
 </body>

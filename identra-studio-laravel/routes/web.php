@@ -3,7 +3,9 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LayananController;
 use App\Models\Layanan;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LayananAdminController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,12 +13,13 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Halaman Public
+// --- 1. HALAMAN PUBLIK ---
 Route::get('/', function () {
     return view('home');
 })->name('home');
 
-// GUEST ONLY (Login & Register)
+
+// --- 2. GUEST ONLY (Hanya bisa diakses jika BELUM login) ---
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login']);
@@ -25,18 +28,49 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-// AUTH ONLY (Halaman yang butuh Login)
+
+// --- 3. AUTH ONLY (Harus login, bisa User biasa atau Admin) ---
 Route::middleware('auth')->group(function () {
     
-    // Dashboard: Mengambil 6 layanan pertama untuk preview
+    // Dashboard User: Mengambil 6 layanan pertama untuk preview
     Route::get('/dashboard', function () {
         $layanans = Layanan::take(6)->get();
         return view('DashboardUser', compact('layanans'));
     })->name('dashboard');
 
-    // Layanan: Menampilkan semua layanan dari database
+    // Halaman Layanan User: Menampilkan semua layanan dari database
     Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 
-    // Logout
+    // Proses Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
+
+
+// --- 4. ADMIN ONLY (Harus login DAN memiliki role 'admin') ---
+// Middleware 'admin' merujuk pada AdminMiddleware yang sudah didaftarkan di bootstrap/app.php
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    
+    // Dashboard Utama Admin
+    Route::get('/dashboard', function () {
+        // Mengambil data statistik dasar untuk dashboard admin
+        $stats = [
+            'total_user' => User::count(),
+            'total_order' => 85, // Dummy data, bisa dihubungkan ke model Pesanan nanti
+            'total_revenue' => 'Rp 25.000.000'
+        ];
+        return view('DashboardAdmin', compact('stats'));
+    })->name('admin.dashboard');
+
+    // Tempat rute CRUD Layanan Admin nantinya (Contoh)
+    // Route::get('/layanan', [LayananAdminController::class, 'index'])->name('admin.layanan');
+    Route::resource('layanan', LayananAdminController::class)->names([
+        'index' => 'admin.layanan.index',
+        'create' => 'admin.layanan.create',
+        'store' => 'admin.layanan.store',
+        'edit' => 'admin.layanan.edit',
+        'update' => 'admin.layanan.update',
+        'destroy' => 'admin.layanan.destroy',
+    ]);
+
+
 });
