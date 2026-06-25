@@ -39,7 +39,7 @@
             <a href="{{ route('dashboard') }}" class="nav-link"><i class="fa-solid fa-table-columns"></i><span>Dashboard</span></a>
             <a href="{{ route('layanan.index') }}" class="nav-link active"><i class="fa-solid fa-layer-group"></i><span>Layanan</span></a>
             <a href="#" class="nav-link"><i class="fa-solid fa-credit-card"></i><span>Transaction</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-location-dot"></i><span>Tracking</span></a>
+            <a href="{{ route('project.tracking') }}" class="nav-link"><i class="fa-solid fa-location-dot"></i><span>Tracking</span></a>
         </nav>
         <form action="{{ route('logout') }}" method="POST" class="mt-auto">
             @csrf

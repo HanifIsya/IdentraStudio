@@ -344,7 +344,7 @@
                 <i class="fa-solid fa-credit-card"></i>
                 <span>Transaction</span>
             </a>
-            <a href="#" class="nav-link">
+            <a href="{{ route('project.tracking') }}" class="nav-link">
                 <i class="fa-solid fa-location-dot"></i>
                 <span>Tracking</span>
             </a>

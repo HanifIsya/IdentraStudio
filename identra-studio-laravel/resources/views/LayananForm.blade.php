@@ -105,11 +105,11 @@
                             <label class="block text-sm font-bold text-gray-700 mb-2">Harga</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400 font-bold">
-                                    $
+                                    Rp
                                 </span>
-                                <!-- Sengaja hanya mengambil angkanya saja jika ada simbol dollar -->
-                                <input type="text" name="harga" value="{{ old('harga', str_replace('$', '', $layanan->harga)) }}" 
-                                       class="w-full pl-11 pr-4 py-3 rounded-xl" placeholder="Contoh: 150" required>
+                         
+                                <input type="number" name="harga" value="{{ old('harga', $layanan->harga) }}" 
+       class="w-full pl-11 pr-4 py-3 rounded-xl bg-white text-black" placeholder="Contoh: 2500000" required>
                             </div>
                         </div>
 

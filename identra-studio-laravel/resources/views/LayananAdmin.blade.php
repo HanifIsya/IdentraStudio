@@ -18,7 +18,6 @@
 </head>
 <body>
 
-    <!-- SIDEBAR (Tersambung Navigasinya) -->
     <aside class="sidebar">
         <div class="font-black text-3xl mb-12 tracking-tighter">IDENTRA<br>STUDIO.</div>
         <nav class="flex-grow">
@@ -39,7 +38,6 @@
     </aside>
 
     <main>
-        <!-- Header -->
         <header class="flex justify-between items-start mb-10">
             <div>
                 <h1 class="text-4xl font-black">Hello Admin !</h1>
@@ -51,7 +49,6 @@
             </div>
         </header>
 
-        <!-- Stats Cards (Sesuai Figma) -->
         <div class="grid grid-cols-4 gap-4 mb-8">
             <div class="glass-card p-4 flex items-center gap-4">
                 <div class="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-stacked"></i></div>
@@ -65,13 +62,11 @@
                 <div class="w-12 h-12 bg-orange-500/10 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-pause"></i></div>
                 <div><p class="text-[10px] opacity-50 text-white">Nonaktif</p><p class="font-bold text-lg text-white">0</p></div>
             </div>
-            <!-- Tombol Tambah Layanan -->
-            <a href="{{ route('admin.layanan.create') }}" class="bg-purple-600 hover:bg-purple-700 transition-all rounded-[20px] font-bold text-sm px-6 py-3">
-    + Tambah Layanan
-</a>
+            <a href="{{ route('admin.layanan.create') }}" class="bg-purple-600 hover:bg-purple-700 transition-all rounded-[20px] font-bold text-sm px-6 py-3 flex items-center justify-center">
+                + Tambah Layanan
+            </a>
         </div>
 
-        <!-- Tabel Layanan -->
         <div class="glass-card overflow-hidden bg-white">
             <div class="p-6 flex justify-between items-center text-black">
                 <h3 class="font-bold text-xl">Daftar Layanan</h3>
@@ -96,16 +91,18 @@
                     <tr class="border-b border-gray-100">
                         <td class="px-6 py-4 flex items-center gap-3">
                             <div class="w-10 h-10 bg-gray-900 rounded-lg flex items-center justify-center text-white"><i class="fa-solid {{ $layanan->ikon }}"></i></div>
-                            <div><p class="font-bold text-sm">{{ $layanan->nama_layanan }}</p><p class="opacity-50">Design</p></div>
+                            <div><p class="font-bold text-sm">{{ $layanan->Nama_layanan ?? $layanan->nama_layanan }}</p><p class="opacity-50">Design</p></div>
                         </td>
                         <td class="px-6 py-4">Design</td>
                         <td class="px-6 py-4 max-w-xs truncate">{{ $layanan->tagline }}</td>
-                        <td class="px-6 py-4 font-bold">Rp {{ number_format(str_replace('$', '', $layanan->harga) * 15000, 0, ',', '.') }}</td>
+                        
+                        <td class="px-6 py-4 font-bold">Rp {{ number_format($layanan->harga, 0, ',', '.') }}</td>
+                        
                         <td class="px-6 py-4"><span class="bg-green-100 text-green-600 px-2 py-1 rounded-md font-bold">Aktif</span></td>
                         <td class="px-6 py-4 flex gap-2">
                             <a href="{{ route('admin.layanan.edit', $layanan->Layanan_ID) }}" class="bg-purple-100 text-purple-600 p-2 rounded-lg inline-block">
-    <i class="fa-solid fa-pen-to-square"></i>
-</a>
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </a>
                             <form action="{{ route('admin.layanan.destroy', $layanan->Layanan_ID) }}" method="POST">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="bg-red-100 text-red-600 p-2 rounded-lg" onclick="return confirm('Hapus layanan ini?')">

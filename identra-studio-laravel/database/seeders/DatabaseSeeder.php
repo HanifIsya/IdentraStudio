@@ -5,51 +5,29 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use App\Models\Layanan;
-use App\Models\Pesanan;
-use App\Models\Pembayaran;
+use App\Models\Transaction;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Seed Users
+        // 1. Jalankan Seeder Layanan asli kamu yang aman dan sesuai Figma
+        $this->call(LayananSeeder::class);
+
+        // 2. Buat Akun User yang bersih
         $user = User::create([
-            'Email'    => 'admin@identrastudio.com',
-            'Nama'     => 'Admin Studio',
-            'Password' => Hash::make('password'),
+            'Nama' => 'Hanif Isya',
+            'Email' => 'hanif@identra.com',
+            'Password' => Hash::make('password123'),
         ]);
 
-        // Seed Layanans
-        $layanans = [
-            ['Nama_layanan' => 'Desain Logo',        'Kategori' => 'Desain Grafis'],
-            ['Nama_layanan' => 'Pembuatan Website',  'Kategori' => 'Web Development'],
-            ['Nama_layanan' => 'Foto Produk',        'Kategori' => 'Fotografi'],
-            ['Nama_layanan' => 'Editing Video',      'Kategori' => 'Videografi'],
-        ];
-
-        foreach ($layanans as $l) {
-            Layanan::create($l);
-        }
-
-        // Seed Pesanan
-        $pesanan = Pesanan::create([
-            'Layanan_ID'      => 1,
-            'User_ID'         => $user->User_ID,
-            'Status'          => 'Menunggu',
-            'Tanggal_pesanan' => now()->toDateString(),
-            'Total_harga'     => 500000,
-            'Keterangan'      => 'Logo untuk brand baru',
+        // 3. Buat data tracking REAL untuk demo (Status PAID, Progress 70%)
+        Transaction::create([
+            'user_id'     => $user->User_ID,
+            'external_id' => 'IDENTRA-' . time(),
+            'amount'      => 5000000,
+            'status'      => 'PAID', 
+            'progress'    => 70, 
         ]);
-
-        // Seed Pembayaran
-        $pembayaran = Pembayaran::create([
-            'Pesanan_ID'    => $pesanan->Pesanan_ID,
-            'Metode_bayar'  => 'Transfer Bank',
-            'Tanggal_bayar' => now()->toDateString(),
-            'Status_bayar'  => false,
-        ]);
-
-        $pesanan->update(['Pembayaran_ID' => $pembayaran->Pembayaran_ID]);
     }
 }

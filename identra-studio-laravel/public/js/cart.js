@@ -89,4 +89,55 @@ document.addEventListener('DOMContentLoaded', () => {
     // Jalankan Fungsi Saat Halaman Dibuka
     renderCartItems();
     calculateTotal();
+
+// Tambahkan logika ini di dalam file public/js/cart.js Anda
+
+const payButton = document.getElementById('pay-button');
+
+if (payButton) {
+    payButton.addEventListener('click', function () {
+        // Hitung total harga dari item di localStorage saat ini
+        const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
+
+        if (totalIDR <= 0) {
+            alert('Keranjang Anda kosong!');
+            return;
+        }
+
+        // Tampilkan loading statis sementara
+        payButton.innerText = 'Processing...';
+        payButton.disabled = true;
+
+        // Kirim request ke backend Laravel menggunakan Fetch API
+       fetch(window.location.origin + '/payment/snap-token', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            },
+            body: JSON.stringify({ total_harga: totalIDR })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.invoice_url) {
+                // Bersihkan keranjang belanja karena transaksi sukses dibuat
+                localStorage.removeItem('identra_cart');
+                
+                // Alihkan user langsung ke halaman pembayaran Xendit yang keren
+                window.location.href = data.invoice_url;
+            } else {
+                alert('Gagal mendapatkan invoice pembayaran: ' + (data.error || 'Unknown Error'));
+                payButton.innerText = 'Bayar Sekarang (Sandbox)';
+                payButton.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error('Error:', err);
+            alert('Terjadi kesalahan sistem saat menghubungi server.');
+            payButton.innerText = 'Bayar Sekarang (Sandbox)';
+            payButton.disabled = false;
+        });
+    });
+}
+
 });
