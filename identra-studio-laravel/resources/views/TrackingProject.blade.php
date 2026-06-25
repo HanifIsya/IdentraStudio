@@ -3,236 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project Tracking - Identra Studio</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Tracking Project - Identra Studio</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { 'urbanist': ['"Urbanist"', 'sans-serif'] },
-                    colors: {
-                        'id-purple': '#A855F7',
-                        'id-purple-dark': '#1E0A2E',
-                        'id-gray': '#94A3B8',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        body {
-            font-family: 'Urbanist', sans-serif; margin: 0; min-height: 100vh; display: flex; color: white;
-            background: linear-gradient(to bottom, #2D0A4E 0%, #6B1FA0 20%, #B06FD8 50%, #E8C8F5 80%, #F5EEF8 100%); overflow: hidden;
-        }
-        .sidebar { width: 220px; min-width: 220px; display: flex; flex-direction: column; padding: 28px 20px; background: rgba(20, 5, 35, 0.55); backdrop-filter: blur(16px); border-right: 1px solid rgba(255,255,255,0.08); gap: 24px; height: 100vh; }
-        .avatar-ring { width: 72px; height: 72px; border-radius: 50%; border: 3px solid #A855F7; overflow: hidden; display: flex; align-items: center; justify-content: center; background: #1E0A2E; font-size: 28px; font-weight: 800; color: white; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; text-decoration: none; font-weight: 500; font-size: 15px; color: #94A3B8; transition: all 0.2s; }
-        .nav-link:hover, .nav-link.active { background: rgba(255,255,255,0.08); color: white; }
-        .nav-link.active { background: rgba(168, 85, 247, 0.15); color: white; }
-        .main { flex: 1; padding: 32px 36px; overflow-y: auto; height: 100vh; }
-        .glass { background: rgba(255, 255, 255, 0.94); border: 1px solid rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border-radius: 24px; color: #1a1a2e; }
-        .project-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.08); border-radius: 16px; }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body>
+<body class="bg-[#0b0a14] text-white font-sans min-h-screen">
 
-    <aside class="sidebar">
-        <div class="font-black text-2xl tracking-tighter">IDENTRA<br>STUDIO.</div>
-
-        <div class="sidebar-profile">
-            <div class="avatar-ring mx-auto mb-2">
-                {{ substr(auth()->user()->Nama, 0, 1) }}
+    <div class="max-w-6xl mx-auto px-4 py-8">
+        
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-white">Tracking Project</h1>
+                <p class="text-xs text-gray-400">Pantau perkembangan pengerjaan layanan agensi Anda</p>
             </div>
-            <h4 class="text-center text-sm font-bold m-0">{{ auth()->user()->Nama }}</h4>
-            <p class="text-center text-[11px] text-id-gray m-0">{{ auth()->user()->email }}</p>
+            <a href="{{ route('dashboard') }}" class="text-xs bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl border border-white/10 transition-all">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Dashboard
+            </a>
         </div>
 
-        <nav class="flex flex-col gap-1 flex-1">
-            <a href="{{ route('dashboard') }}" class="nav-link"><i class="fa-solid fa-table-columns"></i><span>Dashboard</span></a>
-            <a href="{{ route('layanan.index') }}" class="nav-link"><i class="fa-solid fa-layer-group"></i><span>Layanan</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-credit-card"></i><span>Transaction</span></a>
-            <a href="{{ route('project.tracking') }}" class="nav-link active"><i class="fa-solid fa-location-dot"></i><span>Tracking</span></a>
-        </nav>
-
-        <form action="{{ route('logout') }}" method="POST">
-            @csrf
-            <button type="submit" class="nav-link w-full text-left bg-transparent border-none cursor-pointer">
-                <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
-            </button>
-        </form>
-    </aside>
-
-    <main class="main">
-        <header class="flex justify-between items-start mb-8">
-            <div>
-                <h1 class="text-3xl font-black">Project Tracking Workspace</h1>
-                <p class="text-sm text-id-gray mt-1">Pantau perkembangan pengerjaan aplikasi Anda</p>
-            </div>
-        </header>
-
         @if(!$hasPurchased)
-            <div class="glass flex flex-col items-center justify-center py-20 text-center px-6">
-                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center text-id-purple text-2xl mb-4">
+            <div class="bg-white/5 border border-white/10 rounded-2xl p-12 text-center max-w-md mx-auto my-12 shadow-xl">
+                <div class="w-16 h-16 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
                     <i class="fa-solid fa-folder-open"></i>
                 </div>
-                <h3 class="text-xl font-bold text-gray-800">Belum Ada Project Aktif</h3>
-                <p class="text-xs text-gray-500 max-w-sm mt-2">Anda belum melakukan pembelian layanan atau pembayaran Anda belum diverifikasi. Silakan pilih layanan terlebih dahulu.</p>
-                <a href="{{ route('layanan.index') }}" class="mt-5 bg-id-purple text-white px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-purple-600 transition-all shadow-md">Lihat Katalog Jasa</a>
+                <h3 class="text-lg font-bold mb-1">Belum Ada Project Aktif</h3>
+                <p class="text-xs text-gray-400 mb-6 px-4">Silakan lakukan konsultasi atau pilih paket layanan kami untuk memulai project pertama Anda bersama Identra Studio.</p>
+                <a href="{{ route('layanan.index') }}" class="inline-block bg-purple-600 hover:bg-purple-700 text-white text-xs px-6 py-3 rounded-xl font-bold transition-all shadow-md">
+                    Lihat Katalog Jasa
+                </a>
             </div>
         @else
-            <div style="display:grid; grid-template-columns: 1.2fr 0.8fr; gap:20px;">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
                 
-                <div class="flex flex-col gap-5">
-                    <div class="glass p-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-base font-bold text-gray-800">Development Progress</h3>
-                            <div class="flex items-center gap-2">
-                                <div class="h-2 bg-gray-200 rounded-full w-24 overflow-hidden">
-                                    <div class="h-full bg-blue-500 transition-all duration-500" style="width: {{ $progress }}%;"></div>
-                                </div>
-                                <span class="text-sm font-black text-gray-800">{{ $progress }}%</span>
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 shadow-xl">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <span class="text-[10px] bg-purple-600/20 text-purple-400 border border-purple-500/30 px-3 py-1 rounded-full font-bold uppercase tracking-wider">
+                                    {{ $transaction->status ?? 'PAID' }}
+                                </span>
+                                <h2 class="text-lg font-bold mt-2">Project Website & Branding Studio</h2>
+                            </div>
+                            <span class="text-sm font-black text-purple-400 bg-purple-500/10 px-3 py-1 rounded-lg">ID: #{{ substr($transaction->external_id ?? 'IDN-001', -8) }}</span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="flex justify-between text-xs mb-2">
+                                <span class="text-gray-400 font-medium">Persentase Pengerjaan</span>
+                                <span class="font-bold text-purple-400">{{ $progress }}%</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-3 rounded-full overflow-hidden p-[2px] border border-white/5">
+                                <div class="bg-gradient-to-r from-purple-500 to-indigo-500 h-full rounded-full transition-all duration-500" style="width: {{ $progress }}%"></div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col gap-3">
-                            <div class="project-row">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid fa-circle-check text-green-500 text-lg"></i>
-                                    <div>
-                                        <p class="text-xs font-bold text-gray-800">Requirements & Payment Settled</p>
-                                        <p class="text-[10px] text-gray-400 italic">Transaksi Berhasil Terverifikasi</p>
-                                    </div>
-                                </div>
+                        <div class="grid grid-cols-3 text-center text-[10px] text-gray-400 mt-6 pt-4 border-t border-white/5">
+                            <div class="{{ $progress >= 10 ? 'text-purple-400 font-bold' : '' }}">
+                                <i class="fa-solid fa-file-invoice-dollar block text-sm mb-1"></i> Pembayaran
                             </div>
-
-                            <div class="project-row">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid {{ $progress >= 70 ? 'fa-circle-check text-green-500' : 'fa-circle-half-stroke text-blue-500' }} text-lg"></i>
-                                    <div>
-                                        <p class="text-xs font-bold text-gray-800">UI/UX Slicing & Frontend</p>
-                                        <p class="text-[10px] text-gray-400 italic">{{ $progress >= 70 ? 'Selesai dikerjakan' : 'Sedang dalam pengerjaan' }}</p>
-                                    </div>
-                                </div>
+                            <div class="{{ $progress >= 50 ? 'text-purple-400 font-bold' : '' }}">
+                                <i class="fa-solid fa-compass-drafting block text-sm mb-1"></i> Proses Desain
                             </div>
-
-                            <div class="project-row">
-                                <div class="flex items-center gap-3">
-                                    <i class="fa-solid {{ $progress == 100 ? 'fa-circle-check text-green-500' : 'fa-circle text-gray-300' }} text-lg"></i>
-                                    <div>
-                                        <p class="text-xs font-bold text-gray-800">Core System & Deployment</p>
-                                        <p class="text-[10px] text-gray-400 italic">{{ $progress == 100 ? 'Selesai - Project Handover' : 'Menunggu tahap sebelumnya' }}</p>
-                                    </div>
-                                </div>
+                            <div class="{{ $progress >= 100 ? 'text-purple-400 font-bold' : '' }}">
+                                <i class="fa-solid fa-flag-checkered block text-sm mb-1"></i> Handover/Selesai
                             </div>
                         </div>
                     </div>
 
-                    <div class="glass p-6">
-                        <h3 class="text-base font-bold text-gray-800 mb-4">Project Deliverables (ZIP/Assets)</h3>
-                        <div class="project-row">
-                            <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600 text-lg">
-                                    <i class="fa-solid fa-file-zipper"></i>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-bold text-gray-800">Identra_Final_Project_Package.zip</p>
-                                    <p class="text-[10px] text-gray-400 italic">Build Version Dummy Data</p>
-                                </div>
-                            </div>
-                            <a href="#" class="text-[11px] bg-id-purple text-white px-3 py-1.5 rounded-lg font-bold hover:bg-purple-600 transition-colors">Download</a>
-                        </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 text-xs space-y-3">
+                        <h4 class="font-bold text-sm mb-2 text-gray-300">Rincian Transaksi</h4>
+                        <div class="flex justify-between"><span class="text-gray-400">Total Pembayaran:</span><span class="font-bold text-emerald-400">Rp {{ number_format($transaction->amount ?? 3500000, 0, ',', '.') }}</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">Tanggal Transaksi:</span><span>{{ $transaction->created_at ?? now()->format('Y-m-d') }}</span></div>
                     </div>
                 </div>
 
-                <div class="glass flex flex-col h-[450px] overflow-hidden">
-                    <div class="bg-gray-100 p-4 border-b border-gray-200 flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-7 h-7 rounded-full bg-id-purple text-white font-bold flex items-center justify-center text-xs">A</div>
-                            <div>
-                                <h4 class="text-xs font-bold text-gray-800 m-0">Project Manager</h4>
-                                <p class="text-[9px] text-green-600 m-0 font-semibold">Online - Workspace Chat</p>
-                            </div>
+                <div class="bg-white/5 border border-white/10 rounded-2xl flex flex-col shadow-xl overflow-hidden" style="height: 480px;">
+                    <div class="p-4 border-b border-white/10 bg-white/[0.02] flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center font-bold text-xs shadow">
+                            IS
                         </div>
-                        @if($progress == 100)
-                            <span class="bg-green-100 text-green-700 font-bold text-[9px] px-2 py-0.5 rounded-md uppercase">Completed</span>
-                        @endif
+                        <div>
+                            <h3 class="text-xs font-bold">Admin Identra Studio</h3>
+                            <p class="text-[10px] text-emerald-400 flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Online Support
+                            </p>
+                        </div>
                     </div>
 
-                    <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3 bg-gray-50 flex flex-col"></div>
-
-                    @if($progress < 100)
-                        <form id="chat-form" class="p-3 bg-white border-t border-gray-200 flex gap-2">
-                            @csrf
-                            <input type="text" id="chat-input" placeholder="Diskusikan revisi/penyesuaian..." 
-                                   class="flex-1 bg-gray-50 border border-gray-200 text-gray-800 text-xs rounded-xl px-4 py-2 focus:outline-none focus:border-id-purple transition-all">
-                            <button type="submit" class="bg-id-purple text-white px-4 py-2 rounded-xl text-xs font-bold">Kirim</button>
-                        </form>
-                    @else
-                        <div class="p-4 bg-gray-100 border-t border-gray-200 text-center text-xs text-gray-500 font-medium italic">
-                            <i class="fa-solid fa-lock text-gray-400 mr-1"></i> Project telah selesai. Sesi chat konsultasi otomatis ditutup.
+                    <div id="chat-box" class="flex-grow overflow-y-auto p-4 space-y-3">
                         </div>
-                    @endif
+
+                    <div class="p-3 border-t border-white/10 bg-white/[0.01] flex gap-2 items-center">
+                        <input type="text" id="chat-input" placeholder="Ketik pesan ke admin..." 
+                            class="flex-grow bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs text-white focus:outline-none focus:border-purple-500/50 placeholder:text-gray-500 transition-all">
+                        
+                        <button onclick="sendChat()" id="btn-send-chat" 
+                            class="bg-purple-600 hover:bg-purple-700 text-white w-9 h-9 rounded-xl flex items-center justify-center text-xs font-bold transition-all shadow-md active:scale-95">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
 
             </div>
         @endif
-    </main>
 
-    @if($hasPurchased)
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        const chatForm = document.getElementById('chat-form');
-        const chatInput = document.getElementById('chat-input');
+    </div>
 
-        function loadMessages() {
-            fetch('/api/messages')
-                .then(res => res.json())
-                .then(data => {
-                    chatBox.innerHTML = '';
-                    if(data.length === 0) {
-                        chatBox.innerHTML = `<p class="text-[11px] text-gray-400 text-center italic my-auto">Belum ada obrolan.</p>`;
-                        return;
-                    }
-                    data.forEach(msg => {
-                        const isMe = msg.sender_role === 'user';
-                        const msgWrapper = document.createElement('div');
-                        msgWrapper.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'}`;
-                        msgWrapper.innerHTML = `
-                            <div class="max-w-[80%] rounded-xl px-3 py-2 text-xs shadow-sm ${isMe ? 'bg-purple-600 text-white rounded-br-none' : 'bg-gray-200 text-gray-800 rounded-bl-none'}">
-                                <p class="m-0 leading-relaxed">${msg.message}</p>
-                                <span class="text-[9px] block text-right mt-1 opacity-60">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                            </div>
-                        `;
-                        chatBox.appendChild(msgWrapper);
-                    });
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                });
-        }
-
-        if(chatForm) {
-            chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const text = chatInput.value.trim();
-                if(!text) return;
-
-                fetch('/api/messages', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                    body: JSON.stringify({ message: text })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success) { chatInput.value = ''; loadMessages(); }
-                });
-            });
-        }
-
-        loadMessages();
-        setInterval(loadMessages, 3000);
-    </script>
-    @endif
-
+    <script src="{{ asset('js/chat-tracking.js') }}"></script>
 </body>
 </html>

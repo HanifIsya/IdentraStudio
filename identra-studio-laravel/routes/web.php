@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LayananAdminController;
 use App\Http\Controllers\PaymentController; // Pastikan ini di-import jika Anda membuat controllernages terpisah
+use App\Http\Controllers\ChatController;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,12 +53,10 @@ Route::middleware('auth')->group(function () {
     // Rute POST untuk meminta snap token dari controller backend ke server Xendit
     Route::post('/payment/snap-token', [PaymentController::class, 'getSnapToken'])->name('payment.snap');
 
-    // Rute Tampilan Halaman Chat Internal
-    Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    
-    // Rute API Fetch Data Chat
-    Route::get('/api/messages/{userId?}', [ChatController::class, 'getMessages']);
-    Route::post('/api/messages', [ChatController::class, 'sendMessage']);
+   // Cari bagian rute Chat lama Anda di dalam kelompok Route::middleware('auth'), lalu ganti menjadi:
+Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::get('/api/messages/{userId?}', [ChatController::class, 'getMessages']);
+Route::post('/api/messages', [ChatController::class, 'sendMessage']);
 
     // RUTE TRACKING KONDISI REAL DATABASE
     Route::get('/tracking', function () {

@@ -50,7 +50,9 @@
             <a href="#" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span></a>
             <a href="#" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Project Client</span></a>
             <a href="#" class="nav-link"><i class="fa-solid fa-folder-open"></i><span>File & Asset</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-comments"></i><span>Chat Support</span></a>
+            <a href="{{ route('chat.index') }}" class="nav-link {{ Route::is('chat.index') ? 'active' : '' }}">
+                <i class="fa-solid fa-comments"></i><span>Chat Support</span>
+            </a>
         </nav>
 
         <form action="{{ route('logout') }}" method="POST">
