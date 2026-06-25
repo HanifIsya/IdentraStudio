@@ -64,7 +64,7 @@
     <main>
         <header class="flex justify-between items-start mb-10">
             <div>
-                <h1 class="text-4xl font-black">Hello Admin !</h1>
+                <h1 class="text-4xl font-black text-white">Hello Admin !</h1>
                 <p class="text-id-gray opacity-60 mt-1">Today is {{ date('l, d F Y') }}</p>
             </div>
             <div class="w-12 h-12 rounded-2xl glass-card flex items-center justify-center border border-white/10">
@@ -72,6 +72,7 @@
             </div>
         </header>
 
+        {{-- Stats Section --}}
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
             <div class="glass-card p-6 flex justify-between items-center">
                 <div>
@@ -79,7 +80,7 @@
                     <h2 class="text-4xl font-black mt-1">{{ $stats['total_user'] }}</h2>
                     <p class="text-[11px] text-green-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +12% this month</p>
                 </div>
-                <div class="text-4xl opacity-20"><i class="fa-solid fa-users"></i></div>
+                <div class="text-4xl opacity-20 text-white"><i class="fa-solid fa-users"></i></div>
             </div>
             <div class="glass-card p-6 flex justify-between items-center">
                 <div>
@@ -87,25 +88,26 @@
                     <h2 class="text-4xl font-black mt-1">{{ $stats['total_order'] }}</h2>
                     <p class="text-[11px] text-green-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +18% this month</p>
                 </div>
-                <div class="text-4xl opacity-20"><i class="fa-solid fa-cart-shopping"></i></div>
+                <div class="text-4xl opacity-20 text-white"><i class="fa-solid fa-cart-shopping"></i></div>
             </div>
             <div class="glass-card p-6 flex justify-between items-center bg-id-purple/10 border-id-purple/20">
                 <div>
                     <p class="text-sm opacity-60 font-medium text-id-purple">Total Revenue</p>
-                    <h2 class="text-3xl font-black mt-1">{{ $stats['total_revenue'] }}</h2>
+                    <h2 class="text-3xl font-black mt-1 text-white">{{ $stats['total_revenue'] }}</h2>
                     <p class="text-[11px] text-green-400 mt-2"><i class="fa-solid fa-arrow-up"></i> +10% this month</p>
                 </div>
                 <div class="text-4xl text-id-purple opacity-40"><i class="fa-solid fa-wallet"></i></div>
             </div>
         </div>
 
+        {{-- Project Table --}}
         <div class="glass-card p-8 mb-10">
             <div class="flex justify-between items-center mb-8">
-                <h3 class="text-xl font-bold">Project Client Terbaru</h3>
+                <h3 class="text-xl font-bold text-white">Project Client Terbaru</h3>
                 <a href="#" class="text-sm text-id-purple font-bold hover:underline">Lihat Semua</a>
             </div>
             <table class="w-full text-left">
-                <thead class="text-xs text-id-gray opacity-40 uppercase border-b border-white/5">
+                <thead class="text-xs opacity-40 uppercase border-b border-white/5">
                     <tr>
                         <th class="pb-4">Client</th>
                         <th class="pb-4">Layanan</th>
@@ -117,25 +119,57 @@
                 </thead>
                 <tbody class="text-sm">
                     <tr class="border-b border-white/5">
-                        <td class="py-5 font-bold">Rizky Pratama</td>
-                        <td>Website Design</td>
-                        <td class="w-48"><div class="h-1.5 w-full bg-white/5 rounded-full"><div class="h-full bg-id-purple rounded-full" style="width:70%"></div></div></td>
+                        <td class="py-5 font-bold text-white">Rizky Pratama</td>
+                        <td class="text-white/80">Website Design</td>
+                        <td class="w-48">
+                            <div class="h-1.5 w-full bg-white/5 rounded-full">
+                                <div class="h-full bg-id-purple rounded-full" style="width:70%"></div>
+                            </div>
+                        </td>
                         <td class="text-center"><span class="status-badge status-progress">Progress</span></td>
-                        <td>15 Mar 2026</td>
-                        <td class="text-center"><button class="text-id-gray hover:text-white"><i class="fa-solid fa-ellipsis"></i></button></td>
+                        <td class="text-white/80">15 Mar 2026</td>
+                        <td class="text-center"><button class="text-white/40 hover:text-white"><i class="fa-solid fa-ellipsis"></i></button></td>
                     </tr>
-                    </tbody>
+                </tbody>
             </table>
         </div>
 
+        {{-- INTERAKTIF TO-DO LIST (Project Milestones) --}}
+        <div class="glass-card p-8 mb-10">
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Project Milestones</h3>
+                    <p class="text-xs opacity-50">Tracking pengerjaan internal tim Identra</p>
+                </div>
+                <span id="task-stats" class="bg-id-purple/20 text-id-purple px-3 py-1 rounded-full text-[10px] font-bold uppercase">
+                    0 Tasks Remaining
+                </span>
+            </div>
+
+            <div class="flex gap-4 mb-8">
+                <input type="text" id="todo-input" 
+                    class="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-white text-sm focus:outline-none focus:border-id-purple transition-all" 
+                    placeholder="Input milestone baru (contoh: Slicing UI Dashboard)...">
+                <button id="todo-add-btn" 
+                    class="bg-id-purple hover:bg-purple-600 text-white px-6 py-3 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-plus text-xs"></i> Add
+                </button>
+            </div>
+
+            <div id="todo-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {{-- Tasks akan muncul di sini via JavaScript --}}
+            </div>
+        </div>
+
+        {{-- Bottom Widgets Row --}}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="glass-card p-6">
-                <h4 class="font-bold mb-6">Chat Support</h4>
+                <h4 class="font-bold mb-6 text-white">Chat Support</h4>
                 <div class="space-y-4">
                     <div class="flex items-center gap-4">
                         <img src="https://ui-avatars.com/api/?name=Rizky" class="w-10 h-10 rounded-xl">
                         <div class="flex-grow">
-                            <p class="text-sm font-bold">Rizky Pratama</p>
+                            <p class="text-sm font-bold text-white">Rizky Pratama</p>
                             <p class="text-[10px] opacity-50 truncate w-32">I have a problem with my order...</p>
                         </div>
                         <span class="text-[9px] opacity-40">10:42 AM</span>
@@ -143,7 +177,7 @@
                 </div>
             </div>
 
-            <div class="glass-card p-6">
+            <div class="glass-card p-6 text-white">
                 <h4 class="font-bold mb-6">File Project Terbaru</h4>
                 <div class="space-y-4">
                     <div class="flex items-center justify-between">
@@ -156,7 +190,7 @@
                 </div>
             </div>
 
-            <div class="glass-card p-6">
+            <div class="glass-card p-6 text-white">
                 <h4 class="font-bold mb-6">Notifikasi</h4>
                 <div class="space-y-4 text-xs">
                     <div class="flex gap-3">
@@ -168,5 +202,7 @@
         </div>
     </main>
 
+    {{-- Pemanggilan JavaScript File --}}
+    <script src="{{ asset('js/todo.js') }}"></script>
 </body>
 </html>

@@ -41,28 +41,31 @@ Route::middleware('auth')->group(function () {
     // Halaman Layanan User: Menampilkan semua layanan dari database
     Route::get('/layanan', [LayananController::class, 'index'])->name('layanan.index');
 
+    // --- FITUR BARU: Keranjang Belanja (Cart) ---
+    // Mengarahkan ke resources/views/cart.blade.php
+    Route::get('/cart', function () {
+        return view('cart');
+    })->name('cart');
+
     // Proses Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 
 // --- 4. ADMIN ONLY (Harus login DAN memiliki role 'admin') ---
-// Middleware 'admin' merujuk pada AdminMiddleware yang sudah didaftarkan di bootstrap/app.php
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
     // Dashboard Utama Admin
     Route::get('/dashboard', function () {
-        // Mengambil data statistik dasar untuk dashboard admin
         $stats = [
             'total_user' => User::count(),
-            'total_order' => 85, // Dummy data, bisa dihubungkan ke model Pesanan nanti
+            'total_order' => 85, 
             'total_revenue' => 'Rp 25.000.000'
         ];
         return view('DashboardAdmin', compact('stats'));
     })->name('admin.dashboard');
 
-    // Tempat rute CRUD Layanan Admin nantinya (Contoh)
-    // Route::get('/layanan', [LayananAdminController::class, 'index'])->name('admin.layanan');
+    // CRUD Layanan Admin
     Route::resource('layanan', LayananAdminController::class)->names([
         'index' => 'admin.layanan.index',
         'create' => 'admin.layanan.create',
@@ -71,6 +74,4 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
         'update' => 'admin.layanan.update',
         'destroy' => 'admin.layanan.destroy',
     ]);
-
-
 });
