@@ -340,10 +340,9 @@
                 <i class="fa-solid fa-layer-group"></i>
                 <span>Layanan</span>
             </a>
-            <a href="#" class="nav-link">
-                <i class="fa-solid fa-credit-card"></i>
-                <span>Transaction</span>
-            </a>
+           <a href="{{ route('transaction.index') }}" class="nav-link {{ Route::is('transaction.index') ? 'active' : '' }}">
+    <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaction</span>
+</a>
             <a href="{{ route('project.tracking') }}" class="nav-link">
                 <i class="fa-solid fa-location-dot"></i>
                 <span>Tracking</span>

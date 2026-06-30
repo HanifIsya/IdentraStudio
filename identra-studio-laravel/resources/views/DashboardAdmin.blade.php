@@ -45,11 +45,19 @@
 
         <nav class="flex-grow">
             <a href="{{ route('admin.dashboard') }}" class="nav-link active"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-users-gear"></i><span>User Management</span></a>
+            <a href="{{ route('admin.user.index') }}" class="nav-link {{ Route::is('admin.user.*') ? 'active' : '' }}">
+    <i class="fa-solid fa-users-gear"></i><span>User Management</span>
+</a>
             <a href="{{ route('admin.layanan.index') }}" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Layanan</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Project Client</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-folder-open"></i><span>File & Asset</span></a>
+            <a href="{{ route('admin.transaction.index') }}" class="nav-link {{ Route::is('admin.transaction.*') ? 'active' : '' }}">
+            <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span>
+            </a>
+            <a href="{{ route('admin.project.index') }}" class="nav-link {{ Route::is('admin.project.*') ? 'active' : '' }}">
+    <i class="fa-solid fa-briefcase"></i><span>Project Client</span>
+</a>
+            <a href="{{ route('admin.asset.index') }}" class="nav-link {{ Route::is('admin.asset.index') ? 'active' : '' }}">
+        <i class="fa-solid fa-folder-open"></i><span>File & Asset</span>
+    </a>
             <a href="{{ route('chat.index') }}" class="nav-link {{ Route::is('chat.index') ? 'active' : '' }}">
                 <i class="fa-solid fa-comments"></i><span>Chat Support</span>
             </a>

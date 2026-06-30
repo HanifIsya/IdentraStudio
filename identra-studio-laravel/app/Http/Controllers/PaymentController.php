@@ -11,30 +11,35 @@ class PaymentController extends Controller
 {
     public function getSnapToken(Request $request)
     {
-        // 1. Ambil total harga dari request frontend
-        $totalHarga = $request->input('total_harga');
+        // 1. PERBAIKAN: Tangkap nilai 'amount' dan 'layanan_id' sesuai kiriman JSON dari cart.js
+        $totalHarga = $request->input('amount');
+        $layananId  = $request->input('layanan_id');
 
         if (!$totalHarga || $totalHarga <= 0) {
             return response()->json(['error' => 'Keranjang kosong atau nominal salah'], 400);
         }
 
-        // 2. Solusi Tepat SDK v3: Set API Key secara global pada properti statis Configuration
+        if (!$layananId) {
+            return response()->json(['error' => 'Gagal memproses, ID Layanan tidak terbaca.'], 400);
+        }
+
+        // 2. Set API Key secara global pada properti statis Configuration Xendit SDK v3
         Configuration::setXenditKey(env('XENDIT_SECRET_KEY'));
 
-        // 3. Buat instance InvoiceApi tanpa mengoper objek config ke constructor-nya
+        // 3. Buat instance InvoiceApi
         $apiInstance = new InvoiceApi();
 
         // 4. Susun parameter request invoice
         $createInvoiceRequest = new CreateInvoiceRequest([
             'external_id' => 'IDENTRA-' . time(),
             'amount' => (double) $totalHarga,
-            'description' => 'Pembayaran Jasa Pembuatan Website - Identra Studio',
+            'description' => 'Pembayaran Jasa Layanan - Identra Studio',
             'invoice_duration' => 86400,
             'success_redirect_url' => url('/tracking'),
             'failure_redirect_url' => url('/cart'),
             'customer' => [
                 'given_names' => auth()->user()->Nama ?? 'Client Identra',
-                'email' => auth()->user()->email ?? 'client@identra.com',
+                'email' => auth()->user()->Email ?? 'client@identra.com', // Sesuaikan 'Email' kapital jika di database kolomnya kapital
             ]
         ]);
 
@@ -42,13 +47,14 @@ class PaymentController extends Controller
             // 5. Kirim request ke server Xendit
             $result = $apiInstance->createInvoice($createInvoiceRequest);
             
-        // 2. KONDISI REAL: Simpan data transaksi ke database lokal
+            // 6. PERBAIKAN: Simpan data transaksi ke database menggunakan data murni kiriman Cart
             \App\Models\Transaction::create([
-                'user_id' => auth()->user()->User_ID,
+                'user_id'     => auth()->user()->User_ID,
+                'layanan_id'  => $layananId, // <--- SEKARANG 100% DINAMIS MENGIKUTI ID LAYANAN YANG DIPILIH
                 'external_id' => $createInvoiceRequest['external_id'],
-                'amount' => $totalHarga,
-                'status' => 'PAID', // Default menunggu dibayar
-                'progress' => 30,       // Tahap awal setelah invoice terbit
+                'amount'      => $totalHarga,
+                'status'      => 'PAID',     // Langsung diset lunas demi keperluan simulasi sandbox/demo
+                'progress'    => 30,         // Tahap awal setelah invoice sukses
             ]);
 
             // Return URL Invoice sukses

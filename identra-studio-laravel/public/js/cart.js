@@ -90,54 +90,66 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCartItems();
     calculateTotal();
 
-// Tambahkan logika ini di dalam file public/js/cart.js Anda
+    // Logika Pengiriman Pembayaran snap-token
+    const payButton = document.getElementById('pay-button');
 
-const payButton = document.getElementById('pay-button');
+    if (payButton) {
+        payButton.addEventListener('click', function () {
+            // Hitung total harga dari item di localStorage saat ini
+            const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
 
-if (payButton) {
-    payButton.addEventListener('click', function () {
-        // Hitung total harga dari item di localStorage saat ini
-        const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
-
-        if (totalIDR <= 0) {
-            alert('Keranjang Anda kosong!');
-            return;
-        }
-
-        // Tampilkan loading statis sementara
-        payButton.innerText = 'Processing...';
-        payButton.disabled = true;
-
-        // Kirim request ke backend Laravel menggunakan Fetch API
-       fetch(window.location.origin + '/payment/snap-token', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-            },
-            body: JSON.stringify({ total_harga: totalIDR })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.invoice_url) {
-                // Bersihkan keranjang belanja karena transaksi sukses dibuat
-                localStorage.removeItem('identra_cart');
-                
-                // Alihkan user langsung ke halaman pembayaran Xendit yang keren
-                window.location.href = data.invoice_url;
-            } else {
-                alert('Gagal mendapatkan invoice pembayaran: ' + (data.error || 'Unknown Error'));
-                payButton.innerText = 'Bayar Sekarang (Sandbox)';
-                payButton.disabled = false;
+            if (totalIDR <= 0 || cart.length === 0) {
+                alert('Keranjang Anda kosong!');
+                return;
             }
-        })
-        .catch(err => {
-            console.error('Error:', err);
-            alert('Terjadi kesalahan sistem saat menghubungi server.');
-            payButton.innerText = 'Bayar Sekarang (Sandbox)';
-            payButton.disabled = false;
-        });
-    });
+
+            // PERBAIKAN: Mengambil layanan_id asli dari item pertama di keranjang belanja Anda
+            // Jika struktur di layanan.js Anda menyimpannya sebagai item.layanan_id atau item.id,
+            // kode ini akan mencoba mencocokkan properti yang tepat.
+            const targetLayananId = cart[0].layanan_id || cart[0].id;
+
+            // Tampilkan loading statis sementara
+            payButton.innerText = 'Processing...';
+            payButton.disabled = true;
+
+            if (cart.length > 1) {
+    alert('Demi koordinasi proyek yang optimal, Anda hanya dapat memproses 1 jenis layanan dalam 1 transaksi. Silakan hapus salah satu layanan terlebih dahulu.');
+    return;
 }
 
+            // Kirim request ke backend Laravel menggunakan Fetch API
+            fetch(window.location.origin + '/payment/snap-token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+                },
+                // PERBAIKAN: Mengirimkan nominal harga BESERTA layanan_id secara dinamis ke controller
+                body: JSON.stringify({ 
+                    amount: totalIDR,
+                    layanan_id: targetLayananId 
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.invoice_url) {
+                    // Bersihkan keranjang belanja karena transaksi sukses dibuat
+                    localStorage.removeItem('identra_cart');
+                    
+                    // Alihkan user langsung ke halaman pembayaran Xendit yang keren
+                    window.location.href = data.invoice_url;
+                } else {
+                    alert('Gagal mendapatkan invoice pembayaran: ' + (data.error || 'Unknown Error'));
+                    payButton.innerText = 'Bayar Sekarang (Sandbox)';
+                    payButton.disabled = false;
+                }
+            })
+            .catch(err => {
+                console.error('Error:', err);
+                alert('Terjadi kesalahan sistem saat menghubungi server.');
+                payButton.innerText = 'Bayar Sekarang (Sandbox)';
+                payButton.disabled = false;
+            });
+        });
+    }
 });

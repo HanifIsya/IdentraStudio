@@ -22,12 +22,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // 3. Buat data tracking REAL untuk demo (Status PAID, Progress 70%)
-        Transaction::create([
-            'user_id'     => $user->User_ID,
-            'external_id' => 'IDENTRA-' . time(),
-            'amount'      => 5000000,
-            'status'      => 'PAID', 
-            'progress'    => 70, 
-        ]);
+        // Transaction::create([
+        //     'user_id'     => $user->User_ID,
+        //     'external_id' => 'IDENTRA-' . time(),
+        //     'amount'      => 5000000,
+        //     'status'      => 'PAID',
+        //     'layanan_id' => 1, 
+        //     'progress'    => 70, 
+        // ]);
     }
 }

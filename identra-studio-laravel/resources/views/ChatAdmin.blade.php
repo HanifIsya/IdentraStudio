@@ -23,11 +23,11 @@
         <div class="font-black text-3xl mb-12 tracking-tighter">IDENTRA<br>STUDIO.</div>
         <nav class="flex-grow">
             <a href="{{ route('admin.dashboard') }}" class="nav-link"><i class="fa-solid fa-chart-line"></i><span>Dashboard</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-users-gear"></i><span>Manajemen User</span></a>
+            <a href="{{ route('admin.user.index') }}" class="nav-link"><i class="fa-solid fa-users-gear"></i><span>Manajemen User</span></a>
             <a href="{{ route('admin.layanan.index') }}" class="nav-link"><i class="fa-solid fa-boxes-packing"></i><span>Manajemen Layanan</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Project Client</span></a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-folder-open"></i><span>File & Asset</span></a>
+            <a href="{{ route('admin.transaction.index') }}" class="nav-link"><i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span></a>
+            <a href="{{ route('admin.project.index') }}" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Project Client</span></a>
+            <a href="{{ route('admin.asset.index') }}" class="nav-link"><i class="fa-solid fa-folder-open"></i><span>File & Asset</span></a>
             <a href="{{ route('chat.index') }}" class="nav-link active"><i class="fa-solid fa-comments"></i><span>Chat Support</span></a>
         </nav>
         <form action="{{ route('logout') }}" method="POST">
@@ -41,24 +41,25 @@
     <main>
         <div class="w-80 border-r border-white/5 bg-black/20 flex flex-col">
             <div class="p-6 border-b border-white/5">
-                <h2 class="text-xl font-bold">Chat Box</h2>
-                <p class="text-xs text-gray-400">Pilih client untuk membalas pesan</p>
+                <h2 class="text-xl font-bold">Chat Room Proyek</h2>
+                <p class="text-xs text-gray-400">Pilih room proyek untuk membalas pesan</p>
             </div>
             <div class="flex-grow overflow-y-auto p-4 space-y-2">
-                @forelse($chatUsers as $cUser)
-                    <button onclick="selectUser({{ $cUser->User_ID }}, '{{ $cUser->Nama }}')" 
-                        id="user-btn-{{ $cUser->User_ID }}"
-                        class="user-chat-link w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all">
-                        <div class="w-10 h-10 rounded-xl bg-purple-600/30 text-purple-400 font-bold flex items-center justify-center">
-                            {{ strtoupper(substr($cUser->Nama, 0, 2)) }}
+                @forelse($chatRooms as $room)
+                    <button onclick="selectProjectRoom({{ $room->id }}, '{{ $room->user->Nama ?? 'Client' }}', '{{ $room->layanan->Nama_Layanan ?? $room->layanan->nama_layanan ?? 'Custom Project' }}')" 
+                        id="room-btn-{{ $room->id }}"
+                        class="user-chat-link w-full text-left flex items-center gap-3 p-3 rounded-xl hover:bg-white/5 transition-all group">
+                        <div class="w-10 h-10 rounded-xl bg-purple-600/30 text-purple-400 font-bold flex items-center justify-center flex-shrink-0">
+                            {{ strtoupper(substr($room->user->Nama ?? 'CL', 0, 2)) }}
                         </div>
                         <div class="flex-grow min-w-0">
-                            <p class="text-sm font-bold truncate">{{ $cUser->Nama }}</p>
-                            <p class="text-[11px] text-gray-400 truncate">{{ $cUser->Email }}</p>
+                            <p class="text-sm font-bold truncate group-hover:text-purple-400 transition-all">{{ $room->user->Nama ?? 'Client Resmi' }}</p>
+                            <p class="text-[11px] text-gray-400 truncate">{{ $room->layanan->Nama_Layanan ?? $room->layanan->nama_layanan ?? 'Custom Project' }}</p>
+                            <span class="text-[9px] font-mono text-purple-300 bg-purple-500/10 px-1.5 py-0.5 rounded">#00{{ $room->id }}</span>
                         </div>
                     </button>
                 @empty
-                    <p class="text-xs text-center text-gray-500 mt-8">Belum ada pesan masuk.</p>
+                    <p class="text-xs text-center text-gray-500 mt-8">Belum ada room proyek aktif.</p>
                 @endforelse
             </div>
         </div>
@@ -67,7 +68,7 @@
             <div id="empty-chatroom" class="absolute inset-0 flex flex-col items-center justify-center text-center p-8 z-10 bg-[#0b0a14]">
                 <i class="fa-solid fa-message text-4xl text-purple-500/30 mb-3"></i>
                 <h3 class="text-sm font-bold text-gray-400">Pilih Ruang Obrolan</h3>
-                <p class="text-xs text-gray-500 max-w-xs mt-1">Klik salah satu nama client di panel sebelah kiri untuk memulai koordinasi pengerjaan proyek.</p>
+                <p class="text-xs text-gray-500 max-w-xs mt-1">Klik salah satu kamar proyek aktif di panel sebelah kiri untuk memulai koordinasi bimbingan pengerjaan.</p>
             </div>
 
             <div class="p-4 border-b border-white/5 bg-white/[0.01] flex items-center gap-3">
@@ -76,12 +77,12 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold" id="active-user-name">Memuat Client...</h3>
-                    <p class="text-[10px] text-purple-400">Koordinasi Project Agency</p>
+                    <p class="text-[10px] text-purple-400" id="active-project-name">Koordinasi Project Agency</p>
                 </div>
             </div>
 
             <div id="admin-chat-box" class="flex-grow overflow-y-auto p-6 space-y-3">
-                </div>
+            </div>
 
             <div class="p-4 border-t border-white/5 bg-white/[0.01] flex gap-2">
                 <input type="text" id="admin-chat-input" placeholder="Tulis balasan Anda..." 
@@ -94,89 +95,32 @@
     </main>
 
     <script>
-        let activeUserId = null;
-        let pollingInterval = null;
+        let currentActiveTransactionId = null;
 
-        const chatBox = document.getElementById('admin-chat-box');
-        const chatInput = document.getElementById('admin-chat-input');
-        const emptyState = document.getElementById('empty-chatroom');
-
-        function selectUser(userId, name) {
-            activeUserId = userId;
+        function selectProjectRoom(id, clientName, projectName) {
+            currentActiveTransactionId = id;
             
-            // Atur tampilan Header Chat
-            document.getElementById('active-user-name').innerText = name;
-            document.getElementById('active-user-avatar').innerText = name.substring(0, 2).toUpperCase();
-            
-            // Sembunyikan empty state pelindung awal
-            emptyState.classList.add('hidden');
+            // Sembunyikan tirai penutup awal
+            document.getElementById('empty-chatroom').classList.add('hidden');
 
-            // Set fokus menu aktif pada list user
-            document.querySelectorAll('.user-chat-link').forEach(btn => btn.classList.remove('bg-white/10', 'border-l-4', 'border-purple-500'));
-            document.getElementById('user-btn-' + userId).classList.add('bg-white/10', 'border-l-4', 'border-purple-500');
+            // Set Header Detail Kamar Proyek aktif
+            document.getElementById('active-user-name').innerText = clientName;
+            document.getElementById('active-project-name').innerText = projectName + " (#00" + id + ")";
+            document.getElementById('active-user-avatar').innerText = clientName.substring(0, 2).toUpperCase();
 
-            // Jalankan penarikan data pesan
-            loadAdminMessages();
-            
-            // Bereskan interval polling lama agar tidak tabrakan memory leak
-            if (pollingInterval) clearInterval(pollingInterval);
-            pollingInterval = setInterval(loadAdminMessages, 3000);
+            // Toggle Class Highlight List Kiri
+            document.querySelectorAll('.user-chat-link').forEach(btn => btn.classList.remove('bg-white/10'));
+            document.getElementById('room-btn-' + id).classList.add('bg-white/10');
+
+            // Daftarkan target ID ke file external js/chat-admin.js Anda jika ada fungsi penangkap global
+            if (typeof window.setAdminActiveRoom === "function") {
+                window.setAdminActiveRoom(id);
+            } else {
+                // Alternatif cadangan jika dipanggil langsung di js Anda
+                loadAdminRoomMessages(id);
+            }
         }
-
-        function loadAdminMessages() {
-            if (!activeUserId) return;
-
-            fetch('/api/messages/' + activeUserId)
-                .then(res => res.json())
-                .then(data => {
-                    chatBox.innerHTML = '';
-                    data.forEach(msg => {
-                        // Di sisi admin, jika sender_role == 'admin', posisinya di kanan (Me)
-                        // Jika sender_role == 'user', posisinya di kiri (Client)
-                        const isMe = msg.sender_role === 'admin';
-                        
-                        chatBox.innerHTML += `
-                            <div class="flex ${isMe ? 'justify-end' : 'justify-start'} mb-2">
-                                <div class="${isMe ? 'bg-purple-600 text-white' : 'bg-white/10 text-white'} px-4 py-2 rounded-2xl max-w-xs text-xs shadow-sm">
-                                    <p>${msg.message}</p>
-                                </div>
-                            </div>
-                        `;
-                    });
-                    chatBox.scrollTop = chatBox.scrollHeight;
-                });
-        }
-
-        function sendAdminChat() {
-            const text = chatInput.value.trim();
-            if (!text || !activeUserId) return;
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch('/api/messages', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken
-                },
-                body: JSON.stringify({ 
-                    message: text,
-                    user_id: activeUserId // Beri tahu backend pesan ini ditujukan untuk user mana
-                })
-            })
-            .then(res => res.json())
-            .then(response => {
-                if (response.status === 'success') {
-                    chatInput.value = '';
-                    loadAdminMessages();
-                }
-            });
-        }
-
-        // Shortcut enter key
-        chatInput.addEventListener("keyup", function(e) {
-            if (e.key === "Enter") sendAdminChat();
-        });
     </script>
+    <script src="{{ asset('js/chat-admin.js') }}"></script>
 </body>
 </html>

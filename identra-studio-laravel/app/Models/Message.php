@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Message extends Model
 {
     protected $fillable = [
+        'transaction_id',
         'user_id', 
         'sender_role', // Berisi string: 'user' atau 'admin'
         'message', 
