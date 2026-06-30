@@ -3,136 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transaction Management - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>Transaction Management - Admin Headquarters</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background-color: #EFEFF2; /* Soft Cool Platinum */
+            color: #2B2B30; /* Charcoal Graphite */
+        }
+
+        /* Sidebar Matte Charcoal Mewah & Ramping */
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background-color: #1E1E24;
+            color: #FFFFFF;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+        }
+
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            font-size: 0.875rem;
-            color: #9ca3af;
-            transition: all 0.2s;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #9CA3AF;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.25s ease;
+            text-decoration: none;
         }
+
         .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
         }
+
         .nav-link.active {
-            background-color: rgba(147, 51, 234, 0.1);
-            border-left: 4px solid #a855f7;
-            color: #c084fc;
-            font-weight: bold;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
-        .nav-link i {
-            width: 1.25rem;
-            text-align: center;
+
+        .main-workspace {
+            margin-left: 250px;
+            padding: 32px 48px;
+            min-height: 100vh;
+        }
+
+        /* Container Card Style Studio */
+        .studio-card {
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Action Top Utilities Buttons */
+        .util-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            color: #4A5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .util-btn:hover {
+            background-color: #FFFFFF;
+            color: #2B2B30;
+            border-color: #CBD5E1;
         }
     </style>
 </head>
-<body class="bg-[#0b0a14] text-white font-sans min-h-screen flex">
+<body class="min-h-screen">
 
-    <aside class="w-64 bg-[#11101e] border-r border-white/10 p-6 flex flex-col min-h-screen flex-shrink-0">
-        <div class="mb-8 px-2">
-            <h1 class="text-xl font-black bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-wider">
-                IDENTRA <span class="text-white text-xs font-light block tracking-normal text-gray-400">Admin Workspace</span>
-            </h1>
+    <aside class="sidebar p-6 py-8">
+        <div class="px-2 pt-2 mb-8">
+            <h1 class="text-lg font-black tracking-wider text-white">IDENTRA<span class="text-id-gold">.</span><span class="text-[10px] ml-1.5 px-1.5 py-0.5 bg-id-gold/10 text-id-gold rounded font-bold uppercase tracking-widest border border-id-gold/20">HQ</span></h1>
         </div>
 
-        <nav class="flex-grow space-y-1">
+        <div class="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5 mb-6">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-id-gold/20 to-white/5 flex items-center justify-center font-bold text-sm text-id-gold border border-id-gold/20">
+                {{ strtoupper(substr(auth()->user()->Nama, 0, 2)) }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <h4 class="text-xs font-bold truncate text-white leading-tight">{{ auth()->user()->Nama }}</h4>
+                <p class="text-[10px] text-gray-400 truncate mt-0.5">{{ auth()->user()->Email }}</p>
+            </div>
+        </div>
+
+        <nav class="space-y-1 flex-grow">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                <i class="fa-solid fa-chart-line w-5 text-center"></i> <span>Dashboard</span>
             </a>
-            <a href="#" class="nav-link"><i class="fa-solid fa-users-gear"></i><span>User Management</span></a>
+            <a href="{{ route('admin.user.index') }}" class="nav-link">
+                <i class="fa-solid fa-users-gear w-5 text-center"></i> <span>User Management</span>
+            </a>
             <a href="{{ route('admin.layanan.index') }}" class="nav-link">
-                <i class="fa-solid fa-boxes-packing"></i><span>Layanan</span>
+                <i class="fa-solid fa-boxes-packing w-5 text-center"></i> <span>Layanan</span>
             </a>
-            
             <a href="{{ route('admin.transaction.index') }}" class="nav-link active">
-                <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span>
+                <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> <span>Transaksi</span>
             </a>
-            
-            <a href="#" class="nav-link"><i class="fa-solid fa-briefcase"></i><span>Project Client</span></a>
-            <a href="{{ route('admin.asset.index') }}" class="nav-link">
-                <i class="fa-solid fa-folder-open"></i><span>File & Asset</span>
+            <a href="{{ route('admin.project.index') }}" class="nav-link {{ Route::is('admin.project.*') ? 'active' : '' }}">
+                <i class="fa-solid fa-briefcase w-5 text-center"></i> <span>Project Client</span>
             </a>
-            <a href="{{ route('chat.index') }}" class="nav-link">
-                <i class="fa-solid fa-comments"></i><span>Chat Support</span>
+            <a href="{{ route('admin.asset.index') }}" class="nav-link {{ Route::is('admin.asset.index') ? 'active' : '' }}">
+                <i class="fa-solid fa-folder-open w-5 text-center"></i> <span>File & Asset</span>
+            </a>
+            <a href="{{ route('chat.index') }}" class="nav-link {{ Route::is('chat.index') ? 'active' : '' }}">
+                <i class="fa-solid fa-comments w-5 text-center"></i> <span>Chat Support</span>
             </a>
         </nav>
 
-        <div class="border-t border-white/10 pt-4 mt-auto">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="w-full text-left nav-link text-red-400 hover:bg-red-500/10 hover:text-red-300">
-                    <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
-                </button>
-            </form>
-        </div>
+        <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-white/5 mt-auto">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-400 hover:text-red-400 transition-colors text-left cursor-pointer">
+                <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> <span>Logout Sesi</span>
+            </button>
+        </form>
     </aside>
 
-    <main class="flex-grow p-8 overflow-y-auto">
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-2xl font-bold text-white">Transaction Management</h1>
-                <p class="text-xs text-gray-400">Pantau seluruh invoice pembayaran lunas dari customer Identra Studio</p>
+    <main class="main-workspace">
+        
+        <header class="flex justify-between items-center mb-10">
+            <div class="space-y-0.5">
+                <span class="text-[10px] font-mono-atkinson text-id-gold font-bold uppercase tracking-widest"> FINANCE LEDGER CONTROL</span>
+                <h1 class="text-3xl font-black text-[#2B2B30] tracking-tight">Transaction Management</h1>
+                <p class="text-xs text-slate-500 font-medium">Pantau, lacak, dan kelola seluruh berkas invoice pembayaran masuk dari customer.</p>
             </div>
-        </div>
+            
+            <div class="flex items-center gap-3">
+                <button class="util-btn shadow-sm">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                </button>
+            </div>
+        </header>
 
         @if($transactions->isEmpty())
-            <div class="bg-white/5 border border-white/10 rounded-2xl p-12 text-center max-w-md mx-auto my-12 shadow-xl">
-                <div class="w-16 h-16 bg-purple-600/20 text-purple-400 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            <div class="studio-card p-12 text-center max-w-md mx-auto my-12">
+                <div class="w-14 h-14 bg-amber-500/10 text-[#AA7C11] border border-id-gold/20 rounded-xl flex items-center justify-center mx-auto mb-4 text-xl">
                     <i class="fa-solid fa-file-invoice-dollar"></i>
                 </div>
-                <h3 class="text-sm font-bold mb-1">Belum Ada Transaksi Masuk</h3>
-                <p class="text-xs text-gray-400">Belum ada invoice lunas yang diterbitkan oleh sistem keuangan saat ini.</p>
+                <h3 class="text-base font-bold text-[#2B2B30] mb-1">Belum Ada Transaksi Masuk</h3>
+                <p class="text-xs text-slate-500 font-medium">Belum ada rekaman log invoice lunas yang diterbitkan oleh core gateway.</p>
             </div>
         @else
-            <div class="bg-white/5 border border-white/10 rounded-2xl overflow-hidden shadow-xl">
+            <div class="studio-card overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs border-collapse">
                         <thead>
-                            <tr class="bg-white/[0.03] border-b border-white/10 text-gray-400 font-bold uppercase tracking-wider">
-                                <th class="p-4">No. Invoice</th>
-                                <th class="p-4">Customer</th>
-                                <th class="p-4">Layanan / Paket</th>
-                                <th class="p-4">Tanggal Pembayaran</th>
-                                <th class="p-4">Total Pendapatan</th>
-                                <th class="p-4">Status</th>
-                                <th class="p-4 text-center">Aksi</th>
+                            <tr class="bg-black/[0.01] border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                                <th class="p-4 w-28 font-bold">No. Invoice</th>
+                                <th class="p-4 font-bold">Customer</th>
+                                <th class="p-4 font-bold">Layanan / Paket</th>
+                                <th class="p-4 font-bold">Tanggal Pembayaran</th>
+                                <th class="p-4 font-bold">Total Pendapatan</th>
+                                <th class="p-4 font-bold">Status</th>
+                                <th class="p-4 font-bold text-center w-28">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-white/5">
+                        <tbody class="divide-y divide-slate-100 text-[#2B2B30] font-medium">
                             @foreach($transactions as $trx)
-                                <tr class="hover:bg-white/[0.01] transition-all">
-                                    <td class="p-4 font-mono font-bold text-purple-400">
+                                <tr class="hover:bg-white transition-colors">
+                                    <td class="p-4 font-mono-atkinson font-bold text-[#AA7C11]">
                                         #INV-{{ str_pad($trx->id, 4, '0', STR_PAD_LEFT) }}
                                     </td>
                                     <td class="p-4">
-                                        <div class="font-bold text-white">{{ $trx->user->Nama ?? 'Client Resmi' }}</div>
-                                        <div class="text-[10px] text-gray-400 mt-0.5">{{ $trx->user->Email ?? '-' }}</div>
+                                        <div class="font-bold text-slate-800">${{ $trx->user->Nama ?? 'Client Resmi' }}</div>
+                                        <div class="text-[10px] text-slate-400 font-semibold mt-0.5">${{ $trx->user->Email ?? '-' }}</div>
                                     </td>
-                                    <td class="p-4 font-medium text-gray-200">
+                                    <td class="p-4 text-slate-600 font-semibold">
                                         {{ $trx->layanan->Nama_Layanan ?? $trx->layanan->nama_layanan ?? 'Custom Project' }}
                                     </td>
-                                    <td class="p-4 text-gray-400">
+                                    <td class="p-4 text-slate-500 font-mono-atkinson">
                                         {{ \Carbon\Carbon::parse($trx->updated_at)->translatedFormat('d F Y H:i') }} WIB
                                     </td>
-                                    <td class="p-4 font-bold text-emerald-400">
+                                    <td class="p-4 font-black text-slate-800 font-mono-atkinson text-xs">
                                         Rp {{ number_format($trx->amount, 0, ',', '.') }}
                                     </td>
                                     <td class="p-4">
-                                        <span class="text-[10px] bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold uppercase">
+                                        <span class="text-[10px] bg-emerald-50 text-emerald-600 border border-emerald-200 px-2.5 py-0.5 rounded font-bold uppercase tracking-wide">
                                             {{ $trx->status }}
                                         </span>
                                     </td>
                                     <td class="p-4 text-center">
                                         <a href="{{ route('admin.transaction.download-invoice', $trx->id) }}" 
-                                           class="inline-flex items-center gap-1 bg-purple-600 hover:bg-purple-700 text-white font-bold px-3 py-1.5 rounded-lg transition-all text-[11px]">
-                                            <i class="fa-solid fa-file-pdf"></i> PDF
+                                           class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 px-3 py-1.5 rounded-xl font-bold transition-all text-[11px] inline-flex items-center gap-1.5 shadow-sm active:scale-95 cursor-pointer">
+                                            <i class="fa-solid fa-file-pdf text-red-500"></i> PDF
                                         </a>
                                     </td>
                                 </tr>

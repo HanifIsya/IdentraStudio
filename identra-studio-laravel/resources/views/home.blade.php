@@ -1,192 +1,262 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>IDENTRA STUDIO - Premium Creative Agency</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:ital,wght@0,200..800;1,200..800&family=Iceland&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600;800&family=Urbanist:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'urbanist': ['"Urbanist"', 'sans-serif'],
+                        'mono-atkinson': ['"Atkinson Hyperlegible Mono"', 'monospace'],
+                    },
+                    colors: {
+                        'id-gold': '#D4AF37',
+                        'id-gold-light': '#F3E5AB',
+                        'id-silver': '#E2E8F0',
+                        'id-charcoal': '#0B0B0F',
+                        'id-card-bg': 'rgba(255, 255, 255, 0.02)',
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        .atkinson-hyperlegible-mono-800 {
-font-family: "Atkinson Hyperlegible Mono", sans-serif;
-font-optical-sizing: auto;
-font-weight: 800;
-font-style: normal;
-}
-.logo-geser {
-    animation: geser 10s ease-in-out infinite alternate;
-}
-
-@keyframes geser {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(calc(100vw - 100%));
-    }
-}
-
-
+        body { font-family: 'Urbanist', sans-serif; background-color: #0B0B0F; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.01); border: 1px solid rgba(255, 255, 255, 0.04); backdrop-filter: blur(16px); }
+        
+        /* Efek Gradasi Emas dan Perak Cair */
+        .text-gold-gradient { background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #AA7C11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-silver-gradient { background: linear-gradient(135deg, #FFFFFF 0%, #CBD5E1 50%, #64748B 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-gold-gradient { background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%); }
+        
+        /* CSS Mobile Menu Trigger Toggle */
+        #menu-toggle:checked ~ #mobile-menu { transform: translateX(0); opacity: 1; pointer-events: auto; }
+        
+        @keyframes ambient-glow {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(40px, -20px) scale(1.05); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .bg-glow { animation: ambient-glow 12s infinite ease-in-out; }
     </style>
-
-
-@vite('resources/css/app.css')
-
-
-
-
 </head>
+<body class="text-slate-400 antialiased selection:bg-[#D4AF37] selection:text-black">
 
+    <div class="fixed top-0 left-1/3 w-[600px] h-[500px] bg-slate-500/5 rounded-full blur-[140px] pointer-events-none bg-glow z-0"></div>
 
-<body>
+    <nav class="fixed top-0 inset-x-0 z-50 glass-card bg-black/50 border-b border-white/5 py-5 px-6 md:px-12 flex justify-between items-center">
+        <h1 class="text-xl font-black tracking-widest text-white">IDENTRA<span class="text-id-gold">.</span></h1>
+        
+        <input type="checkbox" id="menu-toggle" class="hidden">
+        
+        <ul class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-widest">
+            <li><a href="#layanan" class="text-slate-300 hover:text-id-gold transition-colors">Layanan</a></li>
+            <li><a href="#cara-kerja" class="text-slate-300 hover:text-id-gold transition-colors">Cara Kerja</a></li>
+            <li><a href="#tentang-kami" class="text-slate-300 hover:text-id-gold transition-colors">Tentang Kami</a></li>
+            <li><a href="{{ route('login') }}" class="border border-id-gold/30 text-id-gold hover:bg-id-gold hover:text-black px-5 py-2.5 rounded-xl transition-all duration-300">Workspace Access</a></li>
+        </ul>
 
-<nav class="fixed top-0 z-50 flex justify-between w-full p-6 shadow-lg bg-gray-950">
-    <h1 class="font-extrabold text-white">IDENTRA STUDIO</h1>
-    <ul class="flex gap-6 font-serif text-sm text-white">
-        <li onclick="location.href='{{ route('login') }}'" class="cursor-pointer hover:text-blue-800">Login / Register</li>
-        <li onclick="location.href='#layanan'" class="cursor-pointer hover:text-blue-800">Layanan</li>
-        <li onclick="location.href='#Cara Kerja'" class="cursor-pointer hover:text-blue-800">Cara Kerja</li>
-        <li onclick="location.href='#Tentang Kami'" class="cursor-pointer hover:text-blue-800">Tentang Kami</li>
+        <label for="menu-toggle" class="md:hidden cursor-pointer text-white text-xl z-50">
+            <i class="fa-solid fa-bars"></i>
+        </label>
 
-    </ul>
+        <div id="mobile-menu" class="fixed inset-0 min-h-screen w-full bg-id-charcoal/98 backdrop-blur-xl z-40 flex flex-col justify-center items-center gap-8 transition-all duration-300 transform translate-x-full opacity-0 pointer-events-none md:hidden">
+            <label for="menu-toggle" class="absolute top-6 right-6 text-2xl text-gray-400"><i class="fa-solid fa-xmark"></i></label>
+            <a href="#layanan" onclick="document.getElementById('menu-toggle').checked=false" class="text-xl font-bold uppercase tracking-widest text-white">Layanan</a>
+            <a href="#cara-kerja" onclick="document.getElementById('menu-toggle').checked=false" class="text-xl font-bold uppercase tracking-widest text-white">Cara Kerja</a>
+            <a href="#tentang-kami" onclick="document.getElementById('menu-toggle').checked=false" class="text-xl font-bold uppercase tracking-widest text-white">Tentang Kami</a>
+            <a href="{{ route('login') }}" class="btn-gold-gradient text-black font-bold uppercase tracking-wider px-8 py-3 rounded-xl mt-4">Workspace Access</a>
+        </div>
+    </nav>
 
-</nav>
-<section class="relative inset-0 h-full w-full pt-20 bg-cover bg-center bg-no-repeat pb-[350px]" style="background-image: url('{{ asset('img/image.png') }}');">
-         <h3 class="mx-4 text-sm text-gray-600 text-pretty atkinson-hyperlegible-mono-800">Innovative Digital Entertainment & Creative Art</h3>
+    <section class="relative min-h-screen pt-32 pb-24 md:pt-44 flex flex-col justify-center items-start px-6 md:px-12 lg:px-24 border-b border-white/5 bg-cover bg-center" style="background-image: linear-gradient(to right, #0B0B0F 45%, rgba(11,11,15,0.4)), url('{{ asset('img/image.png') }}');">
+        <div class="max-w-4xl z-10 space-y-5">
+            <h3 class="text-xs md:text-sm text-id-gold font-bold tracking-[0.3em] font-mono-atkinson uppercase">
+                 Innovative Digital Entertainment & Creative Art
+            </h3>
+            
+            <div class="space-y-1 md:space-y-2">
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white leading-none tracking-tighter">IDENTITY</h1>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-silver-gradient leading-none tracking-tighter">ENTERTAINMENT</h1>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-gold-gradient leading-none tracking-tighter">TRANSFORM</h1>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white/20 leading-none tracking-tighter">STUDIO<span class="text-id-gold">.</span></h1>
+            </div>
 
-    <h1 class="m-4 text-5xl font-extrabold text-left text-white">IDENTITY</h1>
-    <h1 class="m-4 text-5xl font-extrabold text-left text-white">ENTERTAINMENT</h1>
-    <h1 class="m-4 text-5xl font-extrabold text-left text-white">TRANSFORM</h1>
-    <h1 class="m-4 text-5xl font-extrabold text-left text-gray-500">STUDIO</h1>
+            <p class="text-sm md:text-base text-slate-400 max-w-xl font-light leading-relaxed pt-2">
+                Kami merancang infrastruktur visual megah dan eksklusif untuk memperkuat identitas korporasi Anda. Kombinasi mahakarya sinematik dan transformasi digital premium.
+            </p>
 
-    <button onclick="location.href='{{ route('login') }}'" class="px-6 py-3 mx-4 mt-10 text-white duration-300 transform border rounded-lg bg-gray-950 hover:bg-gray-700 hover:scale-110 ">MASUK SEKARANG</button>
-
-
-
- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="absolute -bottom-[2px] left-0 w-full z-0 pointer-events-none block">
-  <path fill="#000000" fill-opacity="1" d="M0,64L60,74.7C120,85,240,107,360,133.3C480,160,600,192,720,197.3C840,203,960,181,1080,192C1200,203,1320,245,1380,266.7L1440,288L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
-</svg>
-
-</section>
-
-<section id="layanan" class="relative h-screen bg-black ">
-
-    <h4 class="absolute text-sm text-left text-gray-500 top-40 left-10 ">01 LAYANAN</h4>
-    <h2 class="p-6 pt-48 text-4xl font-bold text-left text-white text-pretty ">MEMBANGUN BRANDING <br> LEWAT VISUAL </h2>
-
-    <div class="flex flex-row justify-center gap-10 p-6">
-        <div class="container flex flex-col w-64 h-64 p-4 border border-white bg-zinc-900 rounded-xl">
-            <h1 class="font-bold text-center text-white">Film Production</h1>
-            <p class="font-sans text-sm text-gray-500 ">Menjadikan Perusahaan Anda
-lebih memiliki Makna.</p>
-                <p class="pt-6 text-sm text-white">Jasa pembuatan video untuk perusahaan,
-termasuk jasa video company profile, film,
-Video Safety Induction, dan iklan TV.</p>
-                    <a href="{{ route('login') }}" class="pt-8 text-white cursor-pointer hover:text-gray-400">LIHAT DETAIL</a>
-
+            <div class="pt-6">
+                <button onclick="location.href='{{ route('login') }}'" class="group btn-gold-gradient text-black font-black tracking-wider text-xs md:text-sm px-8 py-4 rounded-xl transition-all duration-300 shadow-lg shadow-yellow-600/10 flex items-center gap-3 active:scale-95">
+                    MULAI PROYEK EKSKLUSIF <i class="fa-solid fa-arrow-right group-hover:translate-x-1.5 transition-transform"></i>
+                </button>
+            </div>
         </div>
 
-        <div class="container flex flex-col w-64 h-64 p-4 border border-white bg-zinc-900 rounded-xl">
-            <h1 class="font-bold text-center text-white">Video Animation</h1>
-            <p class="font-sans text-sm text-gray-500 ">Membuat video dengan visual
-yang menarik dan unik.</p>
-                <p class="pt-6 text-sm text-white">Jasa pembuatan video animasi kami seperti:
-Video Explainer, Video Presentation, Life
-Shoot Animation, Greetings, dan 2D-3D
-Animasi lainnya.</p>
-                    <a href="{{ route('login') }}" class="pt-4 text-white cursor-pointer hover:text-gray-400">LIHAT DETAIL</a>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" class="absolute bottom-0 left-0 w-full z-0 pointer-events-none block">
+            <path fill="#0B0B0F" d="M0,96L60,112C120,128,240,144,360,138.7C480,133,600,107,720,112C840,117,960,155,1080,154.7C1200,155,1320,117,1380,98L1440,80L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"></path>
+        </svg>
+    </section>
 
-        </div>
-
-
-        <div class="container flex flex-col w-64 h-64 p-4 border border-white bg-zinc-900 rounded-xl">
-            <h1 class="font-bold text-center text-white">Design & IT Support</h1>
-            <p class="font-sans text-sm text-gray-500 ">Konsultan Brand dan Kebutuhan
-IT Perusahaan.</p>
-                <p class="pt-6 text-sm text-white">Menjadi konsultan Desain untuk konsep
-Merek Perusahaan Anda, dan menyediakan
-kebutuhan IT seperti: Website, Aplikasi, dan
-Platform Digital.</p>
-                    <a href="{{ route('login') }}" class="pt-4 text-white cursor-pointer hover:text-gray-400">LIHAT DETAIL</a>
-
-        </div>
-
-
-
-
-    </div>
-
-
-</section>
-
-<section id="Cara Kerja" class="relative h-screen bg-black">
-    <h4 class="absolute text-sm text-left text-gray-500 top-40 left-10 ">02 KENAPA HARUS KAMI</h4>
-    <div class="flex flex-row p-6 pt-48">
-        <h2 class="text-4xl font-bold text-left text-white text-pretty ">HOW WE DO IT</h2>
-        <div class="flex flex-col justify-center gap-6 px-12">
-           <div>
-            <h1 class="text-2xl font-bold text-gray-600">#1 <span class="text-xl text-white"> Briefing & Brainstorming</span></h1>
-            <h2 class="text-sm font-semibold text-gray-400">Tim kami sangat terbuka untuk berdiskusi tentang konsep dan menyesuaikan dengan
-Permintaan Klien. Pengumpulan data Perusahaan anda pun akan aman berada di
-tangan kami.</h2>
-           </div>
-
+    <section id="layanan" class="py-24 px-6 md:px-12 lg:px-24 space-y-12 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-            <h1 class="text-2xl font-bold text-gray-600">#2 <span class="text-xl text-white"> Execution</span></h1>
-            <h2 class="text-sm font-semibold text-gray-400"> Koordinasi tim dan klien dari Proses Produksi hingga Post Produksi, dengan kerja
-cepat, tepat, dan akurat untuk mendapatkan hasil maksimal.</h2>
-           </div>
+                <h4 class="text-xs font-bold text-id-gold font-mono-atkinson tracking-widest uppercase"> 01 LAYANAN UTAMA</h4>
+                <h2 class="text-3xl md:text-5xl font-black text-white mt-2 tracking-tight">STRATEGI BRANDING<br>VISUAL MAHA MEGAH</h2>
+            </div>
+            <p class="text-slate-400 text-sm max-w-sm font-light">Eksplorasi produksi media papan atas terintegrasi untuk memperkuat impresi pasar perusahaan Anda.</p>
+        </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-6">
+            
+            <div class="glass-card p-8 rounded-[20px] flex flex-col justify-between h-[380px] hover:border-id-gold/20 transition-all duration-300 group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-id-gold group-hover:bg-id-gold group-hover:text-black transition-all">
+                        <i class="fa-solid fa-video"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Film Production</h3>
+                    <p class="text-xs text-slate-400 font-light leading-relaxed">
+                        Produksi video berstandar layar lebar untuk kebutuhan korporat kelas dunia: Official Company Profile, Komersial TVC, Safety Induction, dan Sinematik Event.
+                    </p>
+                </div>
+                <a href="{{ route('login') }}" class="text-xs font-bold text-id-gold tracking-widest flex items-center gap-2 pt-4 transition-colors">
+                    REQUEST PROYEK <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+            </div>
+
+            <div class="glass-card p-8 rounded-[20px] flex flex-col justify-between h-[380px] hover:border-id-gold/20 transition-all duration-300 group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-id-gold group-hover:bg-id-gold group-hover:text-black transition-all">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Video Animation</h3>
+                    <p class="text-xs text-slate-400 font-light leading-relaxed">
+                        Visualisasi grafis bergerak mutakhir: High-End Explainer Video, Animasi 2D/3D Mockup Sistem, Motion Graphic Asset Komplit, dan Presentasi Media.
+                    </p>
+                </div>
+                <a href="{{ route('login') }}" class="text-xs font-bold text-id-gold tracking-widest flex items-center gap-2 pt-4 transition-colors">
+                    REQUEST PROYEK <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+            </div>
+
+            <div class="glass-card p-8 rounded-[20px] flex flex-col justify-between h-[380px] hover:border-id-gold/20 transition-all duration-300 group">
+                <div class="space-y-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-lg text-id-gold group-hover:bg-id-gold group-hover:text-black transition-all">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white tracking-wide">Design & IT Support</h3>
+                    <p class="text-xs text-slate-400 font-light leading-relaxed">
+                        Pondasi arsitektur sistem informasi premium agensi: Identitas Visual Brand Komplit, Website Korporat responsif, Landing Page, dan Custom Web App.
+                    </p>
+                </div>
+                <a href="{{ route('login') }}" class="text-xs font-bold text-id-gold tracking-widest flex items-center gap-2 pt-4 transition-colors">
+                    REQUEST PROYEK <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="cara-kerja" class="py-24 bg-black/20 border-y border-white/5 px-6 md:px-12 lg:px-24">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-12 items-start">
+            
             <div>
-            <h1 class="text-2xl font-bold text-gray-600">#3 <span class="text-xl text-white"> Result</span></h1>
-            <h2 class="text-sm font-semibold text-gray-400">Kepuasan klien menjadi keberhasilan tim kami. Kami selalu berusaha menjadi rekan
-yang fleksibel dan dinamis. Karya yang kami hasilkan akan selalu sesuai dengan
-harapan anda.</h2>
-           </div>
+                <h4 class="text-xs font-bold text-id-gold font-mono-atkinson tracking-widest uppercase"> 02 METODOLOGI KERJA</h4>
+                <h2 class="text-3xl md:text-5xl font-black text-white mt-2 tracking-tight">HOW WE<br>DO IT</h2>
+                <p class="text-slate-400 text-xs md:text-sm mt-4 font-light leading-relaxed max-w-xs">
+                    Rangkaian proses kerja taktis terukur untuk memastikan kualitas mutu produk digital Anda terjamin secara presisi.
+                </p>
+            </div>
+
+            <div class="lg:col-span-2 space-y-8">
+                <div class="flex gap-6 items-start border-b border-white/5 pb-6">
+                    <span class="text-2xl md:text-3xl font-black text-id-gold/30 font-mono-atkinson">#1</span>
+                    <div class="space-y-1">
+                        <h3 class="text-lg md:text-xl font-bold text-white">Briefing & High Brainstorming</h3>
+                        <p class="text-xs md:text-sm text-slate-400 font-light leading-relaxed">
+                            Penyelarasan ekspektasi konsep ide bersama jajaran manajemen klien. Pengamanan berkas arsip awal dijamin aman dalam ekosistem korporasi.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start border-b border-white/5 pb-6">
+                    <span class="text-2xl md:text-3xl font-black text-id-gold/30 font-mono-atkinson">#2</span>
+                    <div class="space-y-1">
+                        <h3 class="text-lg md:text-xl font-bold text-white">Premium Execution Workspace</h3>
+                        <p class="text-xs md:text-sm text-slate-400 font-light leading-relaxed">
+                            Eksekusi pembuatan aset digital terkontrol. Pergerakan grafik kemajuan proyek dikomunikasikan secara transparan via client workspace.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 items-start">
+                    <span class="text-2xl md:text-3xl font-black text-id-gold/30 font-mono-atkinson">#3</span>
+                    <div class="space-y-1">
+                        <h3 class="text-lg md:text-xl font-bold text-white">Flawless Delivery & Handover</h3>
+                        <p class="text-xs md:text-sm text-slate-400 font-light leading-relaxed">
+                            Penyerahan output karya final dengan resolusi maksimal yang sah. Berkas terarsip otomatis di cloud server proyek secara terstruktur.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="tentang-kami" class="py-32 px-6 md:px-12 lg:px-24 text-center max-w-4xl mx-auto space-y-8">
+        <h4 class="text-xs font-bold text-id-gold font-mono-atkinson tracking-widest uppercase"> 03 PROFILE STUDIO</h4>
+        <h2 class="text-2xl md:text-4xl font-extrabold text-white text-gold-gradient tracking-tight leading-snug">
+            "Berkembang Bersama dan Selalu Berinovasi dengan karya. We are the decisive factor behind your success."
+        </h2>
+        <p class="text-xs md:text-sm text-slate-400 leading-relaxed font-light max-w-2xl mx-auto">
+            Identra Studio merupakan Rumah Produksi ekonomi kreatif premium yang didirikan secara resmi pada tahun 2026. Kami berfokus penuh dalam melayani perancangan infrastruktur visual strategis skala besar dari instansi Swasta Multinasional maupun BUMN.
+        </p>
+    </section>
+
+    <footer class="bg-black/40 border-t border-white/5 pt-16 pb-8 px-6 md:px-12 lg:px-24">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10 border-b border-white/5 pb-12 mb-8">
+            
+            <div class="space-y-4">
+                <h2 class="text-2xl font-black text-white tracking-wider">IDENTRA STUDIO<span class="text-id-gold">.</span></h2>
+                <p class="text-xs text-slate-500 font-light leading-relaxed">
+                    Providing top-tier creative visual infrastructure layout setups for premium businesses nationwide.
+                </p>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="text-xs font-bold text-white font-mono-atkinson tracking-widest uppercase"> CHANNELS</h4>
+                <ul class="text-xs text-slate-400 space-y-2">
+                    <li><span class="text-slate-600">Kontak:</span> +62 852-3373-1724</li>
+                    <li><span class="text-slate-600">Gmail:</span> admin@identrastudio.com</li>
+                </ul>
+            </div>
+
+            <div class="space-y-3">
+                <h4 class="text-xs font-bold text-white font-mono-atkinson tracking-widest uppercase"> HEADQUARTER</h4>
+                <p class="text-xs text-slate-400 font-light leading-relaxed">
+                    Jl. Dr. Ir. H. Soekarno, Mulyorejo, Kec. Mulyorejo, Surabaya, Jawa Timur 60115
+                </p>
+            </div>
 
         </div>
 
-    </div>
-
-</section>
-
-<section id="Tentang Kami" class="relative flex items-center justify-center h-screen bg-black">
-    <div class="absolute top-0 flex flex-col gap-6 p-6">
-        <h4 class="text-sm text-gray-500">03 TENTANG KAMI</h4>
-        <h1 class="font-serif text-5xl font-bold text-white text-pretty">"Berkembang Bersama dan Selalu Berinovasi
-dengan karya. We are the decisive factor behind
-your success."</h1>
-    </div>
-        <p class="text-sm text-center text-gray-500 text-balance">Identra Studio adalah Rumah Produksi, yang bergerak dalam bisnis ekonomi kreatif.
-Perusahaan kami didirikan pada 2026 . Kami
-memiliki pengalaman bekerja pada proyek-proyek besar dari perusahaan Negar
-dan Swasta.</p>
-
-
-</section>
-
-<section class="relative bg-black min-h-min">
-    <div class="flex flex-col px-6">
-        <h1 class="m-6 font-sans text-2xl font-extrabold text-white">LET'S TALK.</h1>
-        <h1 class="text-sm text-white">kontak : <span class="text-gray-400">+62 852-3373-1724</span></h1>
-        <h1 class="text-sm text-white">gmail : <span class="text-gray-400">admin@identrastudio.com</span></h1>
-        <h1 class="text-sm text-white">lokasi : <span class="text-gray-400">Jl. Dr. Ir. H. Soekarno, Mulyorejo, Kec. Mulyorejo, Surabaya, Jawa Timur 60115</span></h1>
-
-
-    </div>
-</section>
-
-<footer class="p-6 py-10 text-white bg-gray-950">
-    <div class= "gap-4">
-     <img src="{{ asset('img/logo_identra.png') }}" alt="Logo" class="w-auto h-10 mt-4 logo-geser">
-    </div>
-
-    <p class="text-right text-gray-600">PROVIDING CREATIVE IDEAS FOR YOUR BUSINESS</p>
-    <p class="text-sm text-right text-white">&copy; 2026 Identra Studio. All rights reserved.</p>
-</footer>
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+            <p>&copy; 2026 Identra Studio. All rights reserved.</p>
+            <p class="font-mono-atkinson tracking-wider text-[10px] text-id-gold/40">PROVIDING CREATIVE IDEAS FOR YOUR BUSINESS</p>
+        </div>
+    </footer>
 
 </body>
 </html>

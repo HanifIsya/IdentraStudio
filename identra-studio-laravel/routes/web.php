@@ -53,9 +53,9 @@ Route::middleware('auth')->group(function () {
     // --- Xendit Payment Gateway Token ---
     Route::post('/payment/snap-token', [PaymentController::class, 'getSnapToken'])->name('payment.snap');
 
-    // --- PERBAIKAN: Fitur Chat & Koordinasi Proyek Disesuaikan Per Room Proyek ---
+    // --- Fitur Chat & Koordinasi Proyek Disesuaikan Per Room Proyek ---
     Route::get('/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::get('/api/messages/{transactionId?}', [ChatController::class, 'getMessages']); // Menggunakan transactionId
+    Route::get('/api/messages/{transactionId?}', [ChatController::class, 'getMessages']); 
     Route::post('/api/messages', [ChatController::class, 'sendMessage']);
 
     // --- API Fetch Project Assets untuk Tampilan Side Client ---
@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/transactions', [TransactionController::class, 'index'])->name('transaction.index');
     Route::get('/transactions/invoice/{id}', [TransactionController::class, 'downloadInvoice'])->name('transaction.download-invoice');
 
-    // --- Rute Tracking Real Database ---
+    // --- Rute Tracking Real Database (Multi-Room) ---
     Route::get('/tracking', function () {
         $allTransactions = \App\Models\Transaction::with('layanan')
                         ->where('user_id', auth()->user()->User_ID)
@@ -96,14 +96,35 @@ Route::middleware('auth')->group(function () {
 // --- 4. ADMIN ONLY (Harus login DAN memiliki role 'admin') ---
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     
-    // Dashboard Utama Admin
+    // PERBAIKAN: Dashboard Utama Admin Dinamis (Tidak Hardcoded)
     Route::get('/dashboard', function () {
+        // 1. Hitung agregasi statistik riil dari database
         $stats = [
-            'total_user' => User::count(),
-            'total_order' => 85, 
-            'total_revenue' => 'Rp 25.000.000'
+            'total_user'    => User::where('role', 'user')->count(),
+            'total_order'   => \App\Models\Transaction::whereIn('status', ['PAID', 'SETTLED'])->count(), 
+            'total_revenue' => \App\Models\Transaction::whereIn('status', ['PAID', 'SETTLED'])->sum('amount')
         ];
-        return view('DashboardAdmin', compact('stats'));
+
+        // 2. Mengambil 5 project client aktif terbaru untuk tabel utama
+        $recentProjects = \App\Models\Transaction::with(['user', 'layanan'])
+                            ->whereIn('status', ['PAID', 'SETTLED', 'PENDING'])
+                            ->orderBy('updated_at', 'desc')
+                            ->take(5)
+                            ->get();
+
+        // 3. Mengambil 4 room proyek aktif teratas untuk widget chat box samping
+        $recentChats = \App\Models\Transaction::with(['user', 'layanan'])
+                            ->whereIn('status', ['PAID', 'SETTLED', 'PENDING'])
+                            ->orderBy('updated_at', 'desc')
+                            ->take(4)
+                            ->get();
+
+        // 4. Mengambil 4 aset berkas produksi digital paling akhir diunggah
+        $recentFiles = \App\Models\ProjectAsset::orderBy('created_at', 'desc')
+                            ->take(4)
+                            ->get();
+
+        return view('DashboardAdmin', compact('stats', 'recentProjects', 'recentChats', 'recentFiles'));
     })->name('admin.dashboard');
 
     // Halaman Manajemen Transaksi & Invoice Admin

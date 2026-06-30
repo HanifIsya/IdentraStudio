@@ -3,507 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - Identra Studio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Workspace Dashboard - Identra Studio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Iceland&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'iceland': ['"Iceland"', 'sans-serif'],
-                        'urbanist': ['"Urbanist"', 'sans-serif'],
-                    },
-                    colors: {
-                        'id-purple': '#A855F7',
-                        'id-purple-dark': '#1E0A2E',
-                        'id-purple-mid': '#2D1040',
-                        'id-blue': '#3B82F6',
-                        'id-gray': '#94A3B8',
-                        'id-card': '#1A1A2E',
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        * { box-sizing: border-box; }
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+    <style>
         body {
             font-family: 'Urbanist', sans-serif;
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            color: white;
-            background: linear-gradient(to bottom, #2D0A4E 0%, #6B1FA0 20%, #B06FD8 50%, #E8C8F5 80%, #F5EEF8 100%);
-            overflow: hidden;
+            background-color: #EFEFF2; /* Soft Cool Platinum - Mengurangi pancaran cahaya tajam */
+            color: #2B2B30; /* Charcoal Graphite - Lembut di mata dibanding hitam pekat */
         }
 
-        /* Sidebar */
+        /* Sidebar Kokoh dipertahankan sesuai request */
         .sidebar {
-            width: 220px;
-            min-width: 220px;
-            display: flex;
-            flex-direction: column;
-            padding: 28px 20px;
-            background: rgba(20, 5, 35, 0.55);
-            backdrop-filter: blur(16px);
-            border-right: 1px solid rgba(255,255,255,0.08);
-            gap: 24px;
+            width: 250px;
+            min-width: 250px;
+            background-color: #1E1E24;
+            color: #FFFFFF;
             height: 100vh;
-        }
-
-        .sidebar-logo {
-            font-family: 'Urbanist', sans-serif;
-            font-weight: 900;
-            font-size: 22px;
-            line-height: 1.1;
-            letter-spacing: -0.5px;
-            color: white;
-        }
-
-        .sidebar-profile {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            gap: 8px;
-        }
-
-        .avatar-ring {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            border: 3px solid #A855F7;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #1E0A2E;
-            font-size: 28px;
-            font-weight: 800;
-            color: white;
-        }
-
-        .sidebar-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            flex: 1;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
         }
 
         .nav-link {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 14px;
+            padding: 12px 16px;
             border-radius: 12px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 15px;
-            color: #94A3B8;
-            transition: all 0.2s;
+            color: #9CA3AF;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.25s ease;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background: rgba(255,255,255,0.08);
-            color: white;
+        .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
         }
 
         .nav-link.active {
-            background: rgba(168, 85, 247, 0.15);
-            color: white;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .nav-link i {
-            width: 18px;
-            font-size: 16px;
-        }
-
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 10px 14px;
-            border-radius: 12px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-family: 'Urbanist', sans-serif;
-            font-size: 15px;
-            font-weight: 500;
-            color: #94A3B8;
-            width: 100%;
-            text-align: left;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.08);
-            color: white;
-        }
-
-        /* Main content */
-        .main {
-            flex: 1;
-            padding: 32px 36px;
-            overflow-y: auto;
-            height: 100vh;
-        }
-
-        /* Glass card */
-        .glass {
-            background: rgba(255,255,255,0.92);
-            border: 1px solid rgba(255,255,255,0.7);
-            backdrop-filter: blur(12px);
+        /* Card Studio Premium - Transisi Warna Lembut, Spacing Elegan */
+        .studio-card {
+            background-color: #FAFAFA; /* Off-White hangat mengurangi kontras ekstrem */
+            border: 1px solid rgba(0, 0, 0, 0.05);
             border-radius: 20px;
-            color: #1a1a2e;
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.02);
         }
 
-        .glass h3 { color: #1a1a2e; }
-        .glass p { color: #333; }
-
-        /* Service cards */
-        .service-card {
-            border-radius: 20px;
-            padding: 20px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.15);
-        }
-
-        .service-card.white {
-            background: white;
-            color: #111;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .service-card.dark {
-            background: rgba(255,255,255,0.88);
-            border: 1px solid rgba(255,255,255,0.6);
-            color: #1a1a2e;
-        }
-
-        .service-icon {
-            font-size: 32px;
-            margin-bottom: 4px;
-        }
-
-        /* Progress bar */
-        .progress-bar {
-            height: 8px;
-            border-radius: 99px;
-            background: rgba(0,0,0,0.1);
-            overflow: hidden;
-            flex: 1;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 99px;
-            background: #3B82F6;
-        }
-
-        /* Project row */
-        .project-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 14px 18px;
-            background: rgba(0,0,0,0.04);
-            border: 1px solid rgba(0,0,0,0.08);
+        /* Service Box Grid */
+        .service-box {
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
             border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* File icon box */
-        .file-icon-box {
-            width: 44px;
-            height: 44px;
+        .service-box:hover {
+            transform: translateY(-2px);
+            border-color: #D4AF37;
+            background-color: #FFFFFF;
+            box-shadow: 0 12px 20px -8px rgba(212, 175, 55, 0.12);
+        }
+
+        .icon-container {
+            width: 52px;
+            height: 52px;
+            background-color: #F1F3F5;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
-            background: rgba(0,0,0,0.05);
-            border: 1px solid rgba(0,0,0,0.08);
+            margin: 0 auto 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 20px;
+            color: #334155;
+            transition: all 0.25s ease;
         }
 
-        /* Chat support button */
-        .chat-btn {
-            position: fixed;
-            bottom: 28px;
-            right: 28px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: white;
-            color: #111;
-            border-radius: 99px;
-            padding: 12px 20px;
-            cursor: pointer;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-            font-family: 'Urbanist', sans-serif;
-            font-weight: 700;
-            font-size: 15px;
-            transition: transform 0.2s;
+        .service-box:hover .icon-container {
+            background-color: #2B2B30;
+            color: #D4AF37;
+            border-color: transparent;
         }
 
-        .chat-btn:hover {
-            transform: translateY(-2px);
-        }
-
-        .chat-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #A855F7;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-        }
-
-        .new-chat-badge {
-            background: #3B82F6;
-            color: white;
-            border-radius: 99px;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: 700;
-        }
-
-        /* Notification bell */
-        .notif-bell {
-            position: relative;
-            width: 44px;
-            height: 44px;
+        /* Notif Bell Badge */
+        .bell-btn {
+            width: 42px;
+            height: 42px;
             border-radius: 12px;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.1);
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            color: #4A5568;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
-            font-size: 18px;
-            color: rgba(255,255,255,0.7);
+            transition: all 0.2s ease;
         }
 
-        .notif-dot {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 8px;
-            height: 8px;
-            background: #FACC15;
-            border-radius: 50%;
-            border: 2px solid #1A0A2E;
+        .bell-btn:hover {
+            background-color: #FFFFFF;
+            color: #2B2B30;
+            border-color: #CBD5E1;
         }
 
-        /* Scrollbar */
-        .main::-webkit-scrollbar { width: 4px; }
-        .main::-webkit-scrollbar-track { background: transparent; }
-        .main::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+        .workspace-main::-webkit-scrollbar { width: 5px; }
+        .workspace-main::-webkit-scrollbar-track { background: transparent; }
+        .workspace-main::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
     </style>
 </head>
-<body>
+<body class="min-h-screen flex overflow-hidden">
 
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sidebar-logo">IDENTRA<br>STUDIO.</div>
-
-        <div class="sidebar-profile">
-            <div class="avatar-ring">
-                {{ substr(auth()->user()->Nama, 0, 1) }}
+    <aside class="sidebar p-6 flex flex-col justify-between flex-shrink-0">
+        <div class="space-y-8">
+            <div class="px-2 pt-2">
+                <h1 class="text-lg font-black tracking-wider text-white">IDENTRA<span class="text-id-gold">.</span></h1>
             </div>
-            <h4 style="font-size:16px; font-weight:700; margin:0;">{{ auth()->user()->Nama }}</h4>
-            <p style="font-size:12px; color:#94A3B8; margin:0;">{{ auth()->user()->Email }}</p>
+
+            <div class="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5">
+                <div class="w-9 h-9 rounded-xl bg-id-gold text-black font-bold flex items-center justify-center text-xs">
+                    {{ strtoupper(substr(auth()->user()->Nama, 0, 2)) }}
+                </div>
+                <div class="min-w-0 flex-1">
+                    <h4 class="text-xs font-bold truncate text-white leading-tight">{{ auth()->user()->Nama }}</h4>
+                    <p class="text-[10px] text-gray-400 truncate mt-0.5">{{ auth()->user()->Email }}</p>
+                </div>
+            </div>
+
+            <nav class="space-y-1">
+                <a href="{{ route('dashboard') }}" class="nav-link active">
+                    <i class="fa-solid fa-table-columns w-5 text-center"></i> <span>Dashboard</span>
+                </a>
+                <a href="{{ route('layanan.index') }}" class="nav-link">
+                    <i class="fa-solid fa-layer-group"></i>
+                    <span class="tracking-wide">Layanan</span>
+                </a>
+                <a href="{{ route('transaction.index') }}" class="nav-link {{ Route::is('transaction.index') ? 'active' : '' }}">
+                    <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaction</span>
+                </a>
+                <a href="{{ route('project.tracking') }}" class="nav-link">
+                    <i class="fa-solid fa-location-dot w-5 text-center"></i> <span>Tracking</span>
+                </a>
+            </nav>
         </div>
 
-        <nav class="sidebar-nav">
-            <a href="{{ route('dashboard') }}" class="nav-link active">
-                <i class="fa-solid fa-table-columns"></i>
-                <span>Dashboard</span>
-            </a>
-            <a href="{{ route('layanan.index') }}" class="nav-link">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>Layanan</span>
-            </a>
-           <a href="{{ route('transaction.index') }}" class="nav-link {{ Route::is('transaction.index') ? 'active' : '' }}">
-    <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaction</span>
-</a>
-            <a href="{{ route('project.tracking') }}" class="nav-link">
-                <i class="fa-solid fa-location-dot"></i>
-                <span>Tracking</span>
-            </a>
-        </nav>
-
-        <form action="{{ route('logout') }}" method="POST">
+        <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-white/5">
             @csrf
-            <button type="submit" class="logout-btn">
-                <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Logout</span>
+            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-400 hover:text-red-400 transition-colors text-left">
+                <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> <span>Logout Sesi</span>
             </button>
         </form>
     </aside>
 
-    <!-- MAIN -->
-    <main class="main">
+    <main class="flex-grow p-8 lg:p-12 overflow-y-auto h-screen workspace-main">
 
-        <!-- Header -->
-        <header style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:28px;">
-            <div>
-                <h1 style="font-size:32px; font-weight:800; margin:0;">Hello {{ explode(' ', auth()->user()->Nama)[0] }}!</h1>
-                <p style="font-size:14px; color:#94A3B8; margin:4px 0 0;">Today is {{ date('l, d F Y') }}</p>
+        <header class="flex justify-between items-center mb-10">
+            <div class="space-y-0.5">
+                <span class="text-[10px] font-mono-atkinson text-id-gold font-bold uppercase tracking-widest"> CLIENT CORE HUB</span>
+                <h1 class="text-2xl font-black text-[#2B2B30] tracking-tight">Selamat Datang, {{ explode(' ', auth()->user()->Nama)[0] }}</h1>
+                <p class="text-xs text-slate-500 font-medium">Hari ini &bull; {{ date('l, d F Y') }}</p>
             </div>
-            <div class="notif-bell">
+            <button class="bell-btn active:scale-95 shadow-sm">
                 <i class="fa-solid fa-bell"></i>
-                <span class="notif-dot"></span>
-            </div>
+            </button>
         </header>
 
-        <!-- Layanan -->
-       <section style="margin-bottom:28px;">
-    <h3 style="font-size:18px; font-weight:700; margin-bottom:16px;">Layanan</h3>
-    <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:12px;">
-        
-        @forelse($layanans as $layanan)
-        <div class="group service-card bg-white/10 backdrop-blur-md border border-white/10 transition-all duration-300 hover:bg-white cursor-pointer" 
-             style="border-radius:20px; padding:20px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:10px;">
-            
-            <div class="service-icon transition-colors duration-300 text-white group-hover:text-id-purple" style="font-size:32px; margin-bottom:4px;">
-                <i class="fa-solid {{ $layanan->ikon }}"></i>
+        <section class="mb-12">
+            <h3 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4"> Pilihan Layanan</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                
+                @forelse($layanans as $layanan)
+                    <div onclick="window.location='{{ route('layanan.index') }}'" class="service-box cursor-pointer group">
+                        <div class="icon-container">
+                            <i class="fa-solid {{ $layanan->Ikon ?? $layanan->ikon ?? 'fa-cubes' }}"></i>
+                        </div>
+                        <h4 class="text-xs font-bold text-[#2B2B30] group-hover:text-id-gold transition-colors truncate w-full mb-1">
+                           {{ $layanan->Nama_Layanan ?? $layanan->nama_layanan }}
+                        </h4>
+                        <p class="text-[10px] text-slate-500 line-clamp-2 w-full px-1 leading-normal">
+                           {{ $layanan->tagline }}
+                        </p>
+                    </div>
+                @empty
+                    <div class="col-span-6 text-center py-12 studio-card p-6">
+                        <p class="text-xs text-slate-400 italic">Belum ada pilihan paket layanan aktif.</p>
+                    </div>
+                @endforelse
+
             </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
             
-            <p class="transition-colors duration-300 text-white group-hover:text-black" 
-               style="font-weight:700; font-size:12px; margin:0;">
-               {{ $layanan->nama_layanan }}
-            </p>
-            
-            <p class="transition-colors duration-300 text-id-gray group-hover:text-gray-600" 
-               style="font-size:10px; margin:0;">
-               {{ $layanan->tagline }}
-            </p>
-        </div>
-        @empty
-        <div class="col-span-6 text-center py-10 opacity-50">
-            <p>Belum ada layanan yang tersedia di database.</p>
-        </div>
-        @endforelse
-
-    </div>
-</section>
-
-        <!-- Bottom grid -->
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; padding-bottom:90px;">
-
-            <!-- Project Progress -->
-            <div class="glass" style="padding:24px;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <h3 style="font-size:17px; font-weight:700; margin:0; color:#1a1a2e;">Project Progress</h3>
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:12px; color:#6B7280;">Project Progress</span>
-                        <div class="progress-bar" style="width:100px;">
-                            <div class="progress-fill" style="width:70%;"></div>
-                        </div>
-                        <span style="font-size:16px; font-weight:800; color:#1a1a2e;">70%</span>
-                    </div>
+            <div class="lg:col-span-3 studio-card p-6 md:p-8 flex flex-col justify-between space-y-6">
+                <div class="space-y-3">
+                    <span class="bg-blue-50 text-blue-600 border border-blue-100 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md inline-block">
+                        Workspace Guidelines
+                    </span>
+                    <h3 class="text-lg font-black text-[#2B2B30] tracking-tight">Bagaimana cara memulai pengerjaan proyek?</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed font-normal">
+                        Silakan tentukan paket yang Anda inginkan di halaman <strong class="text-[#2B2B30] font-semibold">Layanan</strong> dan lakukan pemesanan. Setelah verifikasi transaksi lunas selesai, sistem akan otomatis membuatkan sebuah <strong class="text-id-gold font-semibold">Project Room</strong> mandiri pada menu <strong class="text-[#2B2B30] font-semibold">Tracking</strong> untuk mengawal koordinasi berkas serta pengerjaan aset kreatif oleh tim developer secara aman.
+                    </p>
                 </div>
-
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <!-- Done -->
-                    <div class="project-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <i class="fa-solid fa-circle-check" style="color:#22C55E; font-size:22px;"></i>
-                            <div>
-                                <p style="font-size:14px; font-weight:600; margin:0; color:#1a1a2e;">Requirements Gathering</p>
-                                <p style="font-size:11px; color:#6B7280; margin:2px 0 0; font-style:italic;">Project Progress: 4/15/2026</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-circle-check" style="color:#22C55E; font-size:18px;"></i>
-                    </div>
-
-                    <!-- In Progress -->
-                    <div class="project-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <i class="fa-solid fa-circle-check" style="color:#9CA3AF; font-size:22px;"></i>
-                            <div>
-                                <p style="font-size:14px; font-weight:500; margin:0; color:#6B7280;">Wireframing</p>
-                                <p style="font-size:11px; color:#6B7280; margin:2px 0 0; font-style:italic;">Project Progress: 4/15/2026</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-circle-half-stroke" style="color:#3B82F6; font-size:18px;"></i>
-                    </div>
-
-                    <!-- Pending -->
-                    <div class="project-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <i class="fa-solid fa-circle-notch fa-spin" style="color:#3B82F6; font-size:22px;"></i>
-                            <div>
-                                <p style="font-size:14px; font-weight:600; margin:0; color:#1a1a2e;">Development</p>
-                                <p style="font-size:11px; color:#6B7280; margin:2px 0 0; font-style:italic;">End Project: 5/5/2026</p>
-                            </div>
-                        </div>
-                        <i class="fa-solid fa-circle" style="color:#D1D5DB; font-size:18px;"></i>
-                    </div>
+                <div class="pt-4 border-t border-slate-100 flex flex-wrap gap-3">
+                    <a href="{{ route('layanan.index') }}" class="bg-gradient-to-r from-id-gold to-[#AA7C11] text-black font-bold text-xs px-5 py-3 rounded-xl active:scale-95 flex items-center gap-1.5 shadow-sm">
+                        Pesan Jasa Baru <i class="fa-solid fa-chevron-right text-[9px]"></i>
+                    </a>
+                    <a href="{{ route('project.tracking') }}" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-bold text-xs px-5 py-3 rounded-xl transition-all active:scale-95 shadow-sm">
+                        Periksa Progress Room
+                    </a>
                 </div>
             </div>
 
-            <!-- Project Files -->
-            <div class="glass" style="padding:24px;">
-                <h3 style="font-size:17px; font-weight:700; margin-bottom:16px; color:#1a1a2e;">Project Files</h3>
-
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <div class="project-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="file-icon-box" style="color:#EF4444;">
-                                <i class="fa-solid fa-file-pdf"></i>
-                            </div>
-                            <div>
-                                <p style="font-size:14px; font-weight:600; margin:0; color:#1a1a2e;">Requirements.pdf</p>
-                                <p style="font-size:11px; color:#6B7280; margin:2px 0 0; font-style:italic;">Uploaded April 30, 09:32</p>
-                            </div>
+            <div class="lg:col-span-2 studio-card p-6 md:p-8 flex flex-col justify-between space-y-6">
+                <div class="space-y-3">
+                    <h4 class="text-xs font-bold text-[#2B2B30] uppercase tracking-widest border-b border-slate-100 pb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-headset text-id-gold"></i> Identra Hub Info
+                    </h4>
+                    <p class="text-xs text-slate-600 leading-relaxed font-normal">
+                        Butuh penyesuaian sistem khusus di luar opsi paket standar, atau ingin mendiskusikan klausul kontrak agensi? Hubungi kami langsung:
+                    </p>
+                    <div class="space-y-3 text-xs font-medium">
+                        <div class="flex items-center gap-3 text-slate-700">
+                            <i class="fa-solid fa-envelope text-slate-400 w-4 text-center"></i> <span class="font-mono-atkinson text-slate-600">support@identra.com</span>
                         </div>
-                        <p style="font-size:11px; color:#6B7280;">Apr 30, 09:32</p>
-                    </div>
-
-                    <div class="project-row">
-                        <div style="display:flex; align-items:center; gap:12px;">
-                            <div class="file-icon-box" style="color:#EAB308;">
-                                <i class="fa-solid fa-file-zipper"></i>
-                            </div>
-                            <div>
-                                <p style="font-size:14px; font-weight:600; margin:0; color:#1a1a2e;">Wireframe.sketch</p>
-                                <p style="font-size:11px; color:#6B7280; margin:2px 0 0; font-style:italic;">Uploaded April 30, 09:32</p>
-                            </div>
+                        <div class="flex items-center gap-3 text-slate-700">
+                            <i class="fa-solid fa-location-dot text-slate-400 w-4 text-center"></i> <span class="line-clamp-2 text-slate-600">Gedung Workspace Identra Studio, Surabaya</span>
                         </div>
-                        <p style="font-size:11px; color:#6B7280;">Apr 30, 09:32</p>
                     </div>
+                </div>
+                <div class="text-[9px] text-slate-400 font-mono text-right uppercase tracking-wider">
+                    Secured by Identra Core System &copy; {{ date('Y') }}
                 </div>
             </div>
 
         </div>
+
     </main>
-
-    <!-- Chat Support Floating -->
-    <div class="chat-btn">
-        <div class="chat-avatar">
-            <i class="fa-solid fa-user" style="color:white; font-size:14px;"></i>
-        </div>
-        <span>Chat Support</span>
-        <span class="new-chat-badge">+ New Chat</span>
-    </div>
 
 </body>
 </html>

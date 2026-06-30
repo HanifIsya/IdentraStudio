@@ -8,4 +8,15 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+        
+    /* ================= TAMBAHAN TEMA PREMIUM IDENTRA STUDIO ================= */
+    --font-urbanist: 'Urbanist', sans-serif;
+    --font-mono-atkinson: 'Atkinson Hyperlegible Mono', monospace;
+    
+    --color-id-gold: #D4AF37;
+    --color-id-gold-light: #F3E5AB;
+    --color-id-silver: #E2E8F0;
+    --color-id-charcoal: #0B0B0F;
+    --color-id-card: rgba(255, 255, 255, 0.02);
+    --color-id-border: rgba(255, 255, 255, 0.05);
 }

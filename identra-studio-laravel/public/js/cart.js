@@ -1,3 +1,5 @@
+// public/js/cart.js
+
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Ambil data dari LocalStorage
     let cart = JSON.parse(localStorage.getItem('identra_cart')) || [];
@@ -8,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let usdRate = 0.000063; 
     let sgdRate = 0.000085; 
 
-    //  Fetch API Kurs Mata Uang
+    // Fetch API Kurs Mata Uang Live
     fetch('https://api.frankfurter.app/latest?from=IDR&to=USD,SGD')
         .then(response => response.json())
         .then(data => {
@@ -24,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
             calculateTotal();
         });
 
-    //  Kalkulator (Reduce)
+    // Kalkulator Total Ringkasan Biaya (Reduce)
     function calculateTotal() {
         const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
         const totalUSD = totalIDR * usdRate;
@@ -38,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    //  Render List (Map)
+    // Render List Keranjang Belanja (Map) - MENYESUAIKAN LIGHT MODE BARU
     function renderCartItems() {
         const container = document.getElementById('cart-items-container');
         if (!container) {
@@ -48,37 +50,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (cart.length === 0) {
             container.innerHTML = `
-                <div class="text-center py-12 opacity-50">
-                    <i class="fa-solid fa-folder-open text-5xl mb-4 block text-purple-400"></i>
-                    <p>Keranjang belanja kosong.</p>
+                <div class="text-center py-12 text-slate-400">
+                    <i class="fa-solid fa-folder-open text-4xl mb-3 block text-slate-300"></i>
+                    <p class="text-xs font-medium">Keranjang belanja Anda kosong.</p>
                 </div>`;
             return;
         }
 
-        // render menggunakan .map()
-        // Pastikan item.nama dan item.harga sesuai dengan yang di push di layanan.js
+        // Render menggunakan .map() dengan kontras Light Mode Premium
         container.innerHTML = cart.map(item => `
-            <div class="flex justify-between items-center bg-white/5 p-5 rounded-2xl border border-white/5 hover:border-purple-500/30 transition-all mb-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-purple-600/20 flex items-center justify-center">
-                        <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>
+            <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-slate-200 hover:border-id-gold/30 transition-all shadow-sm">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 bg-slate-50 border border-slate-200 text-[#2B2B30] rounded-lg flex items-center justify-center text-sm flex-shrink-0">
+                        <i class="fa-solid fa-layer-group"></i>
                     </div>
-                    <div>
-                        <h4 class="font-bold text-base text-white">${item.nama}</h4>
-                        <p class="text-[10px] text-gray-400 uppercase tracking-widest">Identra Project</p>
+                    <div class="min-w-0">
+                        <h4 class="text-xs font-bold text-[#2B2B30] truncate max-w-[180px] md:max-w-[240px]">${item.nama}</h4>
+                        <p class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider mt-0.5">Verified Studio Pack</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-8">
-                    <span class="font-bold text-purple-300">Rp ${(parseInt(item.harga) || 0).toLocaleString('id-ID')}</span>
-                    <button onclick="removeItem('${item.id}')" class="text-gray-500 hover:text-red-500 transition-colors p-2">
-                        <i class="fa-solid fa-trash-can"></i>
+                <div class="flex items-center gap-4 flex-shrink-0">
+                    <span class="text-xs font-black text-slate-800 font-mono-atkinson">Rp ${(parseInt(item.harga) || 0).toLocaleString('id-ID')}</span>
+                    <button onclick="removeItem('${item.id}')" class="text-slate-400 hover:text-red-500 transition-colors p-2 cursor-pointer">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 </div>
             </div>
         `).join('');
     }
 
-    //  Hapus Item (Filter)
+    // Hapus Item dari Keranjang Belanja (Filter)
     window.removeItem = function(id) {
         cart = cart.filter(item => item.id !== id);
         localStorage.setItem('identra_cart', JSON.stringify(cart));
@@ -86,36 +87,39 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateTotal();
     };
 
-    // Jalankan Fungsi Saat Halaman Dibuka
+    // Jalankan Fungsi Inisialisasi Awal Saat Halaman Dibuka
     renderCartItems();
     calculateTotal();
 
-    // Logika Pengiriman Pembayaran snap-token
+    // Logika Pengiriman Pembayaran Token Snap / Invoice
     const payButton = document.getElementById('pay-button');
 
     if (payButton) {
         payButton.addEventListener('click', function () {
-            // Hitung total harga dari item di localStorage saat ini
-            const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
-
-            if (totalIDR <= 0 || cart.length === 0) {
+            // VALIDASI 1: Cek apakah keranjang kosong
+            if (cart.length === 0) {
                 alert('Keranjang Anda kosong!');
                 return;
             }
 
-            // PERBAIKAN: Mengambil layanan_id asli dari item pertama di keranjang belanja Anda
-            // Jika struktur di layanan.js Anda menyimpannya sebagai item.layanan_id atau item.id,
-            // kode ini akan mencoba mencocokkan properti yang tepat.
+            // VALIDASI 2: Batasi pengerjaan agar maksimal 1 layanan per transaksi
+            if (cart.length > 1) {
+                alert('Demi koordinasi proyek yang optimal, Anda hanya dapat memproses 1 jenis layanan dalam 1 transaksi. Silakan hapus salah satu layanan terlebih dahulu.');
+                return;
+            }
+
+            const totalIDR = cart.reduce((sum, item) => sum + (parseInt(item.harga) || 0), 0);
+            if (totalIDR <= 0) {
+                alert('Total nilai transaksi tidak valid.');
+                return;
+            }
+
+            // Ambil layanan_id asli dari item pertama di keranjang belanja
             const targetLayananId = cart[0].layanan_id || cart[0].id;
 
-            // Tampilkan loading statis sementara
-            payButton.innerText = 'Processing...';
+            // Kunci tombol aksi dan tampilkan loading statis
+            payButton.innerText = 'PROCESSING...';
             payButton.disabled = true;
-
-            if (cart.length > 1) {
-    alert('Demi koordinasi proyek yang optimal, Anda hanya dapat memproses 1 jenis layanan dalam 1 transaksi. Silakan hapus salah satu layanan terlebih dahulu.');
-    return;
-}
 
             // Kirim request ke backend Laravel menggunakan Fetch API
             fetch(window.location.origin + '/payment/snap-token', {
@@ -124,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
                 },
-                // PERBAIKAN: Mengirimkan nominal harga BESERTA layanan_id secara dinamis ke controller
                 body: JSON.stringify({ 
                     amount: totalIDR,
                     layanan_id: targetLayananId 
@@ -136,18 +139,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Bersihkan keranjang belanja karena transaksi sukses dibuat
                     localStorage.removeItem('identra_cart');
                     
-                    // Alihkan user langsung ke halaman pembayaran Xendit yang keren
+                    // Alihkan user langsung ke halaman pembayaran resmi
                     window.location.href = data.invoice_url;
                 } else {
                     alert('Gagal mendapatkan invoice pembayaran: ' + (data.error || 'Unknown Error'));
-                    payButton.innerText = 'Bayar Sekarang (Sandbox)';
+                    payButton.innerText = 'BAYAR SEKARANG (SANDBOX)';
                     payButton.disabled = false;
                 }
             })
             .catch(err => {
                 console.error('Error:', err);
                 alert('Terjadi kesalahan sistem saat menghubungi server.');
-                payButton.innerText = 'Bayar Sekarang (Sandbox)';
+                payButton.innerText = 'BAYAR SEKARANG (SANDBOX)';
                 payButton.disabled = false;
             });
         });

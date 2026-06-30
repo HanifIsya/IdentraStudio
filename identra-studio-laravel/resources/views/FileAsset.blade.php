@@ -4,132 +4,222 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>File & Asset Management - Admin</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>File & Asset Management - Admin Headquarters</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Mono:wght@400;600&family=Urbanist:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     <style>
-        /* Styling navigasi sidebar khas Identra Studio */
+        body {
+            font-family: 'Urbanist', sans-serif;
+            background-color: #EFEFF2; /* Soft Cool Platinum */
+            color: #2B2B30; /* Charcoal Graphite */
+        }
+
+        /* Sidebar Matte Charcoal Mewah & Ramping */
+        .sidebar {
+            width: 250px;
+            min-width: 250px;
+            background-color: #1E1E24;
+            color: #FFFFFF;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.02);
+            z-index: 30;
+            display: flex;
+            flex-direction: column;
+        }
+
         .nav-link {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 0.75rem;
-            font-size: 0.875rem;
-            color: #9ca3af;
-            transition: all 0.2s;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #9CA3AF;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.25s ease;
+            text-decoration: none;
         }
+
         .nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.04);
+            color: #FFFFFF;
         }
+
         .nav-link.active {
-            background-color: rgba(147, 51, 234, 0.1);
-            border-left: 4px solid #a855f7;
-            color: #c084fc;
-            font-weight: bold;
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
-        .nav-link i {
-            width: 1.25rem;
-            text-align: center;
+
+        .main-workspace {
+            margin-left: 250px;
+            padding: 32px 48px;
+            min-height: 100vh;
         }
+
+        /* Container Card Style Studio */
+        .studio-card {
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Tombol List Proyek Klien di Sisi Kiri */
+        .project-link {
+            width: 100%;
+            text-align: left;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background-color: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            color: #2B2B30;
+            transition: all 0.2s ease;
+        }
+
+        .project-link:hover {
+            border-color: #D4AF37;
+            background-color: #FFFFFF;
+        }
+
+        /* Action Top Utilities Buttons */
+        .util-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background-color: #FAFAFA;
+            border: 1px solid #E2E8F0;
+            color: #4A5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        /* Modifikasi Scrollbar Internal */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-[#0b0a14] text-white font-sans min-h-screen flex">
+<body class="min-h-screen">
 
-    <aside class="w-64 bg-[#11101e] border-r border-white/10 p-6 flex flex-col min-h-screen flex-shrink-0">
-        <div class="mb-8 px-2">
-            <h1 class="text-xl font-black bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent tracking-wider">
-                IDENTRA <span class="text-white text-xs font-light block tracking-normal text-gray-400">Admin Workspace</span>
-            </h1>
+    <aside class="sidebar p-6 py-8">
+        <div class="px-2 pt-2 mb-8">
+            <h1 class="text-lg font-black tracking-wider text-white">IDENTRA<span class="text-id-gold">.</span><span class="text-[10px] ml-1.5 px-1.5 py-0.5 bg-id-gold/10 text-id-gold rounded font-bold uppercase tracking-widest border border-id-gold/20">HQ</span></h1>
         </div>
 
-        <nav class="flex-grow space-y-1">
+        <div class="flex items-center gap-3 bg-white/[0.03] p-3 rounded-xl border border-white/5 mb-6">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-id-gold/20 to-white/5 flex items-center justify-center font-bold text-sm text-id-gold border border-id-gold/20">
+                {{ strtoupper(substr(auth()->user()->Nama, 0, 2)) }}
+            </div>
+            <div class="min-w-0 flex-1">
+                <h4 class="text-xs font-bold truncate text-white leading-tight">{{ auth()->user()->Nama }}</h4>
+                <p class="text-[10px] text-gray-400 truncate mt-0.5">{{ auth()->user()->Email }}</p>
+            </div>
+        </div>
+
+        <nav class="space-y-1 flex-grow">
             <a href="{{ route('admin.dashboard') }}" class="nav-link">
-                <i class="fa-solid fa-chart-line"></i><span>Dashboard</span>
+                <i class="fa-solid fa-chart-line w-5 text-center"></i> <span>Dashboard</span>
             </a>
-            <a href="#" class="nav-link">
-                <i class="fa-solid fa-users-gear"></i><span>User Management</span>
+            <a href="{{ route('admin.user.index') }}" class="nav-link">
+                <i class="fa-solid fa-users-gear w-5 text-center"></i> <span>User Management</span>
             </a>
             <a href="{{ route('admin.layanan.index') }}" class="nav-link">
-                <i class="fa-solid fa-boxes-packing"></i><span>Layanan</span>
+                <i class="fa-solid fa-boxes-packing w-5 text-center"></i> <span>Layanan</span>
             </a>
-            <a href="#" class="nav-link">
-                <i class="fa-solid fa-file-invoice-dollar"></i><span>Transaksi</span>
+            <a href="{{ route('admin.transaction.index') }}" class="nav-link">
+                <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i> <span>Transaksi</span>
             </a>
-            <a href="#" class="nav-link">
-                <i class="fa-solid fa-briefcase"></i><span>Project Client</span>
+            <a href="{{ route('admin.project.index') }}" class="nav-link">
+                <i class="fa-solid fa-briefcase w-5 text-center"></i> <span>Project Client</span>
             </a>
-            
             <a href="{{ route('admin.asset.index') }}" class="nav-link active">
-                <i class="fa-solid fa-folder-open"></i><span>File & Asset</span>
+                <i class="fa-solid fa-folder-open w-5 text-center"></i> <span>File & Asset</span>
             </a>
-            
-            <a href="{{ route('chat.index') }}" class="nav-link">
-                <i class="fa-solid fa-comments"></i><span>Chat Support</span>
+            <a href="{{ route('chat.index') }}" class="nav-link {{ Route::is('chat.index') ? 'active' : '' }}">
+                <i class="fa-solid fa-comments w-5 text-center"></i> <span>Chat Support</span>
             </a>
         </nav>
 
-        <div class="border-t border-white/10 pt-4 mt-auto">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="w-full text-left nav-link text-red-400 hover:bg-red-500/10 hover:text-red-300">
-                    <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
-                </button>
-            </form>
-        </div>
+        <form action="{{ route('logout') }}" method="POST" class="pt-4 border-t border-white/5 mt-auto">
+            @csrf
+            <button type="submit" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold text-gray-400 hover:text-red-400 transition-colors text-left cursor-pointer">
+                <i class="fa-solid fa-right-from-bracket w-5 text-center"></i> <span>Logout Sesi</span>
+            </button>
+        </form>
     </aside>
 
-    <main class="flex-grow p-8 overflow-y-auto">
+    <main class="main-workspace">
         
-        <div class="flex justify-between items-center mb-8">
-            <div>
-                <h1 class="text-2xl font-bold text-white">File & Asset Management</h1>
-                <p class="text-xs text-gray-400">Unggah dan koordinasikan berkas hasil produksi resmi dengan client</p>
+        <header class="flex justify-between items-center mb-10">
+            <div class="space-y-0.5">
+                <span class="text-[10px] font-mono-atkinson text-id-gold font-bold uppercase tracking-widest"> PRODUCTION FILE DELIVERY</span>
+                <h1 class="text-3xl font-black text-[#2B2B30] tracking-tight">File & Asset Management</h1>
+                <p class="text-xs text-slate-500 font-medium">Unggah, distribusikan, dan koordinasikan berkas hasil produksi resmi dengan client.</p>
             </div>
-            <a href="{{ route('admin.dashboard') }}" class="text-xs bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl border border-white/10 transition-all">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Dashboard
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            <div class="bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl space-y-2 max-h-[550px] overflow-y-auto">
-                <h3 class="text-sm font-bold px-2 mb-4 text-gray-400">Project Client Aktif</h3>
+            <div class="flex items-center gap-3">
+                <button class="util-btn shadow-sm">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-stretch">
+            
+            <div class="studio-card p-4 space-y-2.5 max-h-[550px] overflow-y-auto custom-scroll flex flex-col">
+                <h3 class="text-[10px] font-bold px-2 py-1 text-slate-400 uppercase tracking-widest border-b border-slate-100 mb-2"> Project Client Aktif</h3>
+                
                 @foreach($activeProjects as $project)
-                    <button onclick="selectProject({{ $project->id }}, '{{ $project->layanan->Nama_Layanan ?? $project->layanan->nama_layanan }}', '{{ $project->user->Nama }}')" 
-                        id="project-btn-{{ $project->id }}"
-                        class="project-link w-full text-left p-3 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-all flex items-center justify-between text-xs">
-                        <div class="min-w-0 pr-2">
-                            <p class="font-bold text-white truncate">{{ $project->user->Nama }}</p>
-                            <p class="text-[11px] text-gray-400 mt-0.5 truncate">{{ $project->layanan->Nama_Layanan ?? $project->layanan->nama_layanan }}</p>
+                    <button onclick="selectProject({{ $project->id }}, '{{ $project->layanan->Nama_Layanan ?? $project->layanan->nama_layanan ?? 'Custom Project' }}', '{{ $project->user->Nama }}')" 
+                            id="project-btn-{{ $project->id }}"
+                            class="project-link flex items-center justify-between group cursor-pointer text-left">
+                        <div class="min-w-0 flex-1 pr-2">
+                            <p class="font-bold text-slate-800 group-hover:text-id-gold transition-colors truncate text-xs">
+                                {{ $project->user->Nama }}
+                            </p>
+                            <p class="text-[10px] text-slate-500 mt-0.5 font-medium truncate">
+                                {{ $project->layanan->Nama_Layanan ?? $project->layanan->nama_layanan ?? 'Custom Project' }}
+                            </p>
                         </div>
-                        <span class="text-[10px] font-mono text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded flex-shrink-0">#00{{ $project->id }}</span>
+                        <span class="text-[9px] font-mono-atkinson font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded border border-slate-300">
+                            #00{{ $project->id }}
+                        </span>
                     </button>
                 @endforeach
             </div>
 
-            <div class="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl flex flex-col shadow-xl overflow-hidden relative" style="height: 550px;">
+            <div class="lg:col-span-3 studio-card flex flex-col shadow-xl overflow-hidden relative" style="height: 550px;">
                 
-                <div id="empty-state" class="absolute inset-0 bg-[#12111f] flex flex-col items-center justify-center text-center p-6 z-10">
-                    <i class="fa-solid fa-folder-closed text-5xl text-purple-500/30 mb-4 animate-bounce"></i>
-                    <h4 class="font-bold text-sm">Pilih Project Client</h4>
-                    <p class="text-xs text-gray-400 max-w-xs mt-1">Silakan pilih salah satu proyek aktif di sebelah kiri untuk mengelola berkas hasil produksi.</p>
+                <div id="empty-state" class="absolute inset-0 bg-[#EFEFF2] border border-slate-200 rounded-2xl flex flex-col items-center justify-center text-center p-6 z-10">
+                    <i class="fa-solid fa-folder-closed text-4xl text-slate-400 mb-3"></i>
+                    <h4 class="font-bold text-sm text-[#2B2B30]">Pilih Project Client</h4>
+                    <p class="text-xs text-slate-500 max-w-xs mt-1 font-medium leading-normal">Silakan pilih salah satu proyek aktif di sebelah kiri untuk mengelola rincian berkas hasil produksi.</p>
                 </div>
 
-                <div class="p-4 border-b border-white/10 bg-white/[0.02] flex justify-between items-center">
-                    <div>
-                        <h3 id="active-project-title" class="text-xs font-bold text-white">-</h3>
-                        <p id="active-client-name" class="text-[10px] text-purple-400 mt-0.5">-</p>
+                <div class="p-5 border-b border-slate-200 bg-black/[0.005] flex justify-between items-center flex-wrap gap-4">
+                    <div class="min-w-0">
+                        <h3 id="active-project-title" class="text-sm font-black text-[#2B2B30] tracking-tight truncate">-</h3>
+                        <p id="active-client-name" class="text-[11px] text-[#AA7C11] font-bold mt-0.5">-</p>
                     </div>
-                    <button onclick="document.getElementById('upload-input').click()" class="bg-purple-600 hover:bg-purple-700 text-white text-[11px] px-4 py-2 rounded-xl font-bold transition-all flex items-center gap-1.5 shadow">
-                        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Berkas Baru
+                    <button onclick="document.getElementById('upload-input').click()" class="bg-[#2B2B30] hover:bg-[#1E1E24] text-white text-xs uppercase tracking-widest font-black py-3 px-4 rounded-xl transition-all shadow flex items-center gap-1.5 active:scale-95 cursor-pointer">
+                        <i class="fa-solid fa-cloud-arrow-up text-id-gold"></i> Upload Berkas Baru
                     </button>
                     <input type="file" id="upload-input" class="hidden" onchange="uploadAssetFile()">
                 </div>
 
-                <div id="asset-list-container" class="flex-grow overflow-y-auto p-4 space-y-3">
-                </div>
+                <div id="asset-list-container" class="flex-grow overflow-y-auto p-5 space-y-3 custom-scroll bg-[#F4F5F7]"></div>
             </div>
 
         </div>
